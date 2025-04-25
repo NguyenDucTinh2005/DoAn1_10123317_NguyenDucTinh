@@ -13,9 +13,13 @@ namespace BUS
     public class TaiKhoanBus
     {
         TaiKhoanDAL taiKhoanDAL = new TaiKhoanDAL();
+        public DataTable getAllTaiKhoan()
+        {
+            return taiKhoanDAL.getAllTaiKhoan();
+        }
         public bool insertTaiKhoan(TaiKhoanDTO tk)
         {
-          
+
             return taiKhoanDAL.insertTaiKhoan(tk);
         }
         public bool KiemTraDangNhap(string tenDangNhap, string matKhau)
@@ -25,6 +29,14 @@ namespace BUS
         public bool DangKyTaiKhoan(TaiKhoanDTO tk)
         {
             return taiKhoanDAL.dangKyTaiKhoan(tk);
+        }
+        public bool updateTaiKhoan(TaiKhoanDTO tk)
+        {
+            return taiKhoanDAL.updateTaiKhoan(tk);
+        }
+        public bool deleteTaiKhoan(TaiKhoanDTO tk)
+        {
+            return taiKhoanDAL.detedeTaiKhoan(tk);
         }
     }
 }

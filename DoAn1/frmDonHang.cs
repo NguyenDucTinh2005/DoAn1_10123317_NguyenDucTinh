@@ -15,6 +15,7 @@ namespace DoAn1
 {
     public partial class frmDonHang : Form
     {
+        KhachHangBUS khachHangBUS = new KhachHangBUS();
         DonHangBUS donHangBUS = new DonHangBUS();
         public frmDonHang()
         {
@@ -34,6 +35,7 @@ namespace DoAn1
         {
             if (donHangBUS.deleteDonHang(txtMaDonHang.Text))
             {
+                khachHangBUS.DeleteKH(txtMaDonHang.Text);
                 MessageBox.Show("Hủy đơn hàng thành công!");
                 LoadDonHangList();
                 txtMaDonHang.Clear();

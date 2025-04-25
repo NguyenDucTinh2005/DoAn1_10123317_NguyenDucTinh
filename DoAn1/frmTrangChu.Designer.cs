@@ -76,6 +76,7 @@
             this.btnHeThong.TabIndex = 2;
             this.btnHeThong.Text = "Hệ Thống";
             this.btnHeThong.UseVisualStyleBackColor = true;
+            this.btnHeThong.Click += new System.EventHandler(this.btnHeThong_Click);
             // 
             // btnHoaDon
             // 

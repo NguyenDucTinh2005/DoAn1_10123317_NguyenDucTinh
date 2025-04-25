@@ -44,6 +44,7 @@
     <Compile Include="DBconnect.cs" />
     <Compile Include="DonHangDAL.cs" />
     <Compile Include="KhachHangDAL.cs" />
+    <Compile Include="LichSuDatHangDAL.cs" />
     <Compile Include="LoaiMonAnDAL.cs" />
     <Compile Include="MonAnDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

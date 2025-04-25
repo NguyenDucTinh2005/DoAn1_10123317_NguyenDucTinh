@@ -1,4 +1,4 @@
-﻿drop DATABASE DoAn1
+﻿create DATABASE DoAn1
 go
 use DoAn1
 
@@ -54,6 +54,24 @@ CREATE TABLE ChiTietDonHang (
     FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE LichSuDonHang (
+    MaDonHang CHAR(10),
+    NgayDat DATETIME,
+    MaKhachHang CHAR(10),
+    MaMonAn CHAR(10),
+    TenMonAn NVARCHAR(100),
+    SoLuong INT,
+    ThanhTien FLOAT,
+    ThoiGianDat DATETIME,
+
+    -- Liên kết đến KhachHang
+    FOREIGN KEY (MaKhachHang) REFERENCES KhachHang(MaKhachHang) 
+        ON UPDATE CASCADE ON DELETE CASCADE,
+
+    -- Liên kết đến MonAn
+    FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn)
+        ON UPDATE CASCADE ON DELETE CASCADE
+);
 
 --Chen duwx lieeuj
 --Bang Tai khoan
@@ -147,3 +165,22 @@ Select*from TaiKhoan
 
 select*from  DonHang
 
+CREATE TRIGGER trg_XoaKhachHangKhiXoaDonHang
+ON DonHang
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Xóa khách hàng nếu không còn đơn hàng nào khác
+    DELETE FROM KhachHang
+    WHERE MaKhachHang IN (
+        SELECT d.MaKhachHang
+        FROM deleted d
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM DonHang dh
+            WHERE dh.MaKhachHang = d.MaKhachHang
+        )
+    );
+END;

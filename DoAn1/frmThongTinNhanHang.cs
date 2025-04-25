@@ -18,6 +18,7 @@ namespace DoAn1
     {
         KhachHangBUS khachHangBUS = new KhachHangBUS();
         DonHangBUS DonHangBUS = new DonHangBUS();
+        LichSuDatHangBUS LichSuDatHangBUS = new LichSuDatHangBUS();
         public frmThongTinNhanHang()
         {
             InitializeComponent();
@@ -25,6 +26,7 @@ namespace DoAn1
 
         private void btnDatHang_Click(object sender, EventArgs e)
         {
+         
             string tenNguoiNhan = txtTenNguoiNhan.Text.Trim();
             string soDienThoai = txtSoDienThoai.Text.Trim();
             string diaChi = txtDiaChiNhanHang.Text.Trim();

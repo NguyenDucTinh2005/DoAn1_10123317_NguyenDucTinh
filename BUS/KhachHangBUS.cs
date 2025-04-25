@@ -46,5 +46,10 @@ namespace BUS
         {
             return khachHang.kiemtraDiaChi(maKhachHang);
         }
+
+        public bool DeleteKH(string maKhachHang)
+        {
+            return khachHang.DeleteKH(maKhachHang);
+        }
     }
 }

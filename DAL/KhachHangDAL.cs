@@ -81,5 +81,27 @@ namespace DAL
         {
             return !string.IsNullOrWhiteSpace(diaChi);
         }
+
+        public bool DeleteKH(string maDonHang)
+        {
+            try
+            {
+                string query = "DELETE FROM DonHang WHERE MaDonHang = @maDonHang";
+                con.Open();
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@maDonHang", maDonHang);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+                con.Close();
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                throw new Exception("Lỗi khi xóa đơn hàng: " + ex.Message);
+            }
+        }
+
     }
 }
