@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChiTienDonHangDAL.cs" />
     <Compile Include="DBconnect.cs" />
     <Compile Include="DonHangDAL.cs" />
+    <Compile Include="HoaDonDAL.cs" />
     <Compile Include="KhachHangDAL.cs" />
     <Compile Include="LichSuDatHangDAL.cs" />
     <Compile Include="LoaiMonAnDAL.cs" />

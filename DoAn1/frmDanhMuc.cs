@@ -152,35 +152,69 @@ namespace DoAn1
             LoadMonAnList();
         }
 
+        private bool ValidateForm()
+        {
+            errorProvider1.Clear();
+            bool isValid = true;
+
+            // Danh sách các trường cần kiểm tra rỗng
+            var requiredFields = new Dictionary<Control, string>
+    {
+        { txtMaMon, "Vui lòng nhập mã món!" },
+        { txtTenMon, "Vui lòng nhập tên món!" },
+        { cboLoaiMon, "Vui lòng chọn loại món!" },
+        { txtDonGia, "Vui lòng nhập đơn giá!" }
+    };
+
+            foreach (var field in requiredFields)
+            {
+                if (string.IsNullOrWhiteSpace(field.Key.Text))
+                {
+                    errorProvider1.SetError(field.Key, field.Value);
+                    isValid = false;
+                }
+            }
+
+            // Kiểm tra đơn giá có phải là số và > 0
+            if (!float.TryParse(txtDonGia.Text, out float donGia) || donGia <= 0)
+            {
+                errorProvider1.SetError(txtDonGia, "Đơn giá phải là số lớn hơn 0!");
+                isValid = false;
+            }
+
+            // Kiểm tra mã món trùng
+            if (monan.kiemTraMaTrung(txtMaMon.Text) == 1)
+            {
+                errorProvider1.SetError(txtMaMon, "Mã món đã tồn tại!");
+                isValid = false;
+            }
+
+            return isValid;
+        }
 
         private void btnThemMon_Click(object sender, EventArgs e)
         {
-            MonAnDTO monAnDTO = new MonAnDTO(txtMaMon.Text, txtTenMon.Text, cboLoaiMon.SelectedValue.ToString(), txtMoTa.Text, float.Parse(txtDonGia.Text));
+            if (!ValidateForm()) return;
 
-            if (string.IsNullOrEmpty(cboLoaiMon.SelectedValue.ToString()))
+            float donGia = float.Parse(txtDonGia.Text);
+            MonAnDTO monAnDTO = new MonAnDTO(
+                txtMaMon.Text,
+                txtTenMon.Text,
+                cboLoaiMon.SelectedValue.ToString(),
+                txtMoTa.Text,
+                donGia
+            );
+
+            if (monan.insertMonAn(monAnDTO))
             {
-                MessageBox.Show("Vui lòng chọn loại món!", "Thông báo");
-            }
-            else if (monan.kiemTraMaTrung(txtMaMon.Text) == 1)
-            {
-                MessageBox.Show("Mã món đã tồn tại!", "Thông báo");
+                MessageBox.Show("Thêm thành công!");
+                LoadMonAnList();
             }
             else
             {
-                if (monan.insertMonAn(monAnDTO))
-                {
-                    MessageBox.Show("Thêm thành công!");
-                    LoadMonAnList();
-                }
-                else
-                {
-                    MessageBox.Show("Thêm thất bại!");
-                }
+                MessageBox.Show("Thêm thất bại!");
             }
         }
-
-
-
 
         private void dtgvMonAn_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -197,7 +231,25 @@ namespace DoAn1
 
         private void btnSuaMon_Click(object sender, EventArgs e)
         {
-            MonAnDTO monAnDTO = new MonAnDTO(txtMaMon.Text, txtTenMon.Text, cboLoaiMon.SelectedValue.ToString(), txtMoTa.Text, float.Parse(txtDonGia.Text));
+            // Kiểm tra nếu người dùng chưa chọn món để sửa (txtMaMon rỗng hoặc không hợp lệ)
+            if (string.IsNullOrWhiteSpace(txtMaMon.Text))
+            {
+                MessageBox.Show("Vui lòng chọn món cần sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Kiểm tra dữ liệu đầu vào nếu muốn dùng lại hàm ValidateForm()
+            if (!ValidateForm()) return;
+
+            float donGia = float.Parse(txtDonGia.Text);
+            MonAnDTO monAnDTO = new MonAnDTO(
+                txtMaMon.Text,
+                txtTenMon.Text,
+                cboLoaiMon.SelectedValue.ToString(),
+                txtMoTa.Text,
+                donGia
+            );
+
             if (monan.updateMonAn(monAnDTO))
             {
                 MessageBox.Show("Sửa thành công!");
@@ -209,12 +261,28 @@ namespace DoAn1
             }
         }
 
+
         private void btnXoaMon_Click(object sender, EventArgs e)
         {
+            // Kiểm tra nếu chưa chọn món (mã món rỗng)
+            if (string.IsNullOrWhiteSpace(txtMaMon.Text))
+            {
+                MessageBox.Show("Vui lòng chọn món cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Hỏi lại người dùng để xác nhận
+            DialogResult result = MessageBox.Show("Bạn có chắc muốn xóa món này không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.No)
+                return;
+
+            // Thực hiện xóa
             if (monan.deleteMonAn(txtMaMon.Text))
             {
                 MessageBox.Show("Xóa thành công!");
                 LoadMonAnList();
+
+                // Xóa trắng các trường nhập
                 txtMaMon.Clear();
                 txtTenMon.Clear();
                 txtDonGia.Clear();
@@ -224,12 +292,19 @@ namespace DoAn1
             {
                 MessageBox.Show("Xóa thất bại!");
             }
-
         }
+
 
         private void btnTimMon_Click(object sender, EventArgs e)
         {
-            string keyword = txtTimKiemMon.Text;
+            string keyword = txtTimKiemMon.Text.Trim();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                MessageBox.Show("Vui lòng nhập từ khóa tìm kiếm!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             DataTable searchResult = monan.searchMonAn(keyword);
             if (searchResult.Rows.Count > 0)
             {
@@ -237,10 +312,10 @@ namespace DoAn1
             }
             else
             {
-                MessageBox.Show(string.Format("Không tìm thấy món '{0}'!", keyword), "Thông báo");
+                MessageBox.Show(string.Format("Không tìm thấy món '{0}'!", keyword), "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
         }
+
         #endregion
 
         #region Khách hàng

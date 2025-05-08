@@ -51,5 +51,10 @@ namespace BUS
         {
             return MonAnDAL.getMonAnByLoai(maLoaiMon);
         }
+
+        public string GetMaMonAnByTen(string tenMonAn)
+        {
+            return MonAnDAL.GetMaMonAnByTen(tenMonAn);
+        }
     }
 }

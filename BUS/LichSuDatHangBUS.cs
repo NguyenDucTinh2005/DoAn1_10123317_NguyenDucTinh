@@ -16,11 +16,7 @@ namespace BUS
         {
             return lichSuDatHangDAL.getAllLichSuDatHang();
         }
-        public bool insertLichSuDatHang(LichSuDatHangDTO lichSuDatHang)
-        {
-            return lichSuDatHangDAL.insertLichSuDatHang(lichSuDatHang);
-        }
-        public bool deleteLichSuDatHang(string maDonHang)
+       public bool deleteLichSuDatHang(string maDonHang)
         {
             return lichSuDatHangDAL.deleteLichSuDatHang(maDonHang);
         }

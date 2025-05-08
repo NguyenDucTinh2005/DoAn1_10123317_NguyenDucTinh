@@ -35,6 +35,7 @@ namespace DAL
             con.Close();
             return false;
         }
+
         public bool deleteDonHang(string maDonHang)
         {
             string query = string.Format("DELETE FROM DonHang WHERE MaDonHang = '{0}'", maDonHang);
@@ -48,11 +49,12 @@ namespace DAL
             con.Close();
             return false;
         }
-
+      
         public DataTable SearchDonHang(string keyword)
         {
             string query = "SELECT * FROM DonHang WHERE MaDonHang LIKE @keyword OR NgayDat LIKE @keyword";
             return dBconnect.getAll(query);
         }
+        
     }
 }

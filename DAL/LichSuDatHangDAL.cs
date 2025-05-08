@@ -14,43 +14,30 @@ namespace DAL
         DBconnect DBconnect = new DBconnect();
         public DataTable getAllLichSuDatHang()
         {
-            string query = "SELECT * FROM LichSuDatHang";
+
+            string query = "SELECT dh.MaDonHang, dh.NgayDat, kh.TenKhachHang, ctdh.MaMonAn, ma.TenMonAn, " +
+                           "ctdh.SoLuong, ctdh.ThanhTien, ctdh.ThoiGianDat " +
+                           "FROM DonHang dh " +
+                           "JOIN ChiTietDonHang ctdh ON dh.MaDonHang = ctdh.MaDonHang " +
+                           "JOIN MonAn ma ON ctdh.MaMonAn = ma.MaMonAn " +
+                           "JOIN KhachHang kh ON dh.MaKhachHang = kh.MaKhachHang";
             return DBconnect.getAll(query);
         }
-        public bool insertLichSuDatHang(LichSuDatHangDTO lichSuDatHang)
-        {
-            string query = string.Format("INSERT INTO LichSuDatHang (MaDonHang, NgayDat, MaKhachHang, MaMonAn, TenMonAn, SoLuong, ThanhTien, ThoiGianDat) " +
-                                         "VALUES ('{0}', '{1}', '{2}', '{3}', N'{4}', {5}, {6}, GETDATE())",
-                                         lichSuDatHang.MaDonHang,
-                                         lichSuDatHang.NgayDat.ToString("yyyy-MM-dd"),
-                                         lichSuDatHang.MaKhachHang,
-                                         lichSuDatHang.MaMonAn,
-                                         lichSuDatHang.TenMonAn,
-                                         lichSuDatHang.SoLuong,
-                                         lichSuDatHang.ThanhTien);
-            con.Open();
-            SqlCommand cmd = new SqlCommand(query, con);
-            if (cmd.ExecuteNonQuery() > 0)
-            {
-                con.Close();
-                return true;
-            }
-            con.Close();
-            return false;
-        }
+
 
         public bool deleteLichSuDatHang(string maDonHang)
         {
-            string query = string.Format("DELETE FROM LichSuDatHang WHERE MaDonHang = '{0}'", maDonHang);
             con.Open();
-            SqlCommand cmd = new SqlCommand(query, con);
-            if (cmd.ExecuteNonQuery() > 0)
-            {
-                con.Close();
-                return true;
-            }
+
+            SqlCommand cmd = new SqlCommand("SP_XoaLichSuDatHang", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@MaDonHang", maDonHang);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+
             con.Close();
-            return false;
+
+            return rowsAffected > 0;
         }
     }
 }

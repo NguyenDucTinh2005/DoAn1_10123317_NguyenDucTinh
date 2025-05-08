@@ -34,19 +34,21 @@
             this.txtTimKiem = new System.Windows.Forms.TextBox();
             this.btnTimKiem = new System.Windows.Forms.Button();
             this.btnXoaLichSu = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dtgvLichSuDatHang = new System.Windows.Forms.DataGridView();
+            this.txtMaDonHang = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgvLichSuDatHang)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtMaDonHang);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btnDatLai);
             this.panel1.Controls.Add(this.txtTimKiem);
             this.panel1.Controls.Add(this.btnTimKiem);
             this.panel1.Controls.Add(this.btnXoaLichSu);
-            this.panel1.Controls.Add(this.dataGridView1);
+            this.panel1.Controls.Add(this.dtgvLichSuDatHang);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -64,7 +66,7 @@
             // 
             // btnDatLai
             // 
-            this.btnDatLai.Location = new System.Drawing.Point(570, 79);
+            this.btnDatLai.Location = new System.Drawing.Point(572, 71);
             this.btnDatLai.Name = "btnDatLai";
             this.btnDatLai.Size = new System.Drawing.Size(140, 39);
             this.btnDatLai.TabIndex = 4;
@@ -82,12 +84,13 @@
             // 
             // btnTimKiem
             // 
-            this.btnTimKiem.Location = new System.Drawing.Point(384, 73);
+            this.btnTimKiem.Location = new System.Drawing.Point(394, 76);
             this.btnTimKiem.Name = "btnTimKiem";
             this.btnTimKiem.Size = new System.Drawing.Size(140, 45);
             this.btnTimKiem.TabIndex = 2;
             this.btnTimKiem.Text = "Tìm kiếm";
             this.btnTimKiem.UseVisualStyleBackColor = true;
+            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
             // btnXoaLichSu
             // 
@@ -97,17 +100,26 @@
             this.btnXoaLichSu.TabIndex = 1;
             this.btnXoaLichSu.Text = "Xóa lịch sử";
             this.btnXoaLichSu.UseVisualStyleBackColor = true;
+            this.btnXoaLichSu.Click += new System.EventHandler(this.btnXoaLichSu_Click);
             // 
-            // dataGridView1
+            // dtgvLichSuDatHang
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 165);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(1189, 426);
-            this.dataGridView1.TabIndex = 0;
+            this.dtgvLichSuDatHang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgvLichSuDatHang.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dtgvLichSuDatHang.Location = new System.Drawing.Point(0, 165);
+            this.dtgvLichSuDatHang.Name = "dtgvLichSuDatHang";
+            this.dtgvLichSuDatHang.RowHeadersWidth = 51;
+            this.dtgvLichSuDatHang.RowTemplate.Height = 24;
+            this.dtgvLichSuDatHang.Size = new System.Drawing.Size(1189, 426);
+            this.dtgvLichSuDatHang.TabIndex = 0;
+            this.dtgvLichSuDatHang.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgvLichSuDatHang_CellClick);
+            // 
+            // txtMaDonHang
+            // 
+            this.txtMaDonHang.Location = new System.Drawing.Point(910, 41);
+            this.txtMaDonHang.Name = "txtMaDonHang";
+            this.txtMaDonHang.Size = new System.Drawing.Size(100, 22);
+            this.txtMaDonHang.TabIndex = 6;
             // 
             // frmLichSuDatHang
             // 
@@ -119,7 +131,7 @@
             this.Text = "frmLichSuDatHang";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgvLichSuDatHang)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -127,11 +139,12 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dtgvLichSuDatHang;
         private System.Windows.Forms.Button btnXoaLichSu;
         private System.Windows.Forms.Button btnDatLai;
         private System.Windows.Forms.TextBox txtTimKiem;
         private System.Windows.Forms.Button btnTimKiem;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtMaDonHang;
     }
 }

@@ -118,7 +118,11 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(520, 338);
+            this.linkLabel1.BackColor = System.Drawing.Color.OldLace;
+            this.linkLabel1.DisabledLinkColor = System.Drawing.Color.DodgerBlue;
+            this.linkLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.linkLabel1.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.linkLabel1.Location = new System.Drawing.Point(452, 341);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(88, 25);
             this.linkLabel1.TabIndex = 6;
@@ -129,7 +133,8 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(261, 338);
+            this.label4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label4.Location = new System.Drawing.Point(156, 341);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(302, 25);
             this.label4.TabIndex = 7;

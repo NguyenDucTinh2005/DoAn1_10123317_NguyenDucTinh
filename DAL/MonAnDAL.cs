@@ -90,5 +90,17 @@ namespace DAL
             };
             return connect.getAll(query, parameters);
         }
+
+        public string GetMaMonAnByTen(string tenMonAn)
+        {
+            string query = "SELECT MaMonAn FROM MonAn WHERE TenMonAn = @TenMonAn";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@TenMonAn", tenMonAn)
+            };
+
+            DataTable dt = getAll(query, parameters);
+            return dt.Rows.Count > 0 ? dt.Rows[0]["MaMonAn"].ToString() : null;
+        }
     }
 }

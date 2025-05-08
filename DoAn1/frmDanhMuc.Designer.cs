@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.btnLamMoiLoaiMon = new System.Windows.Forms.Button();
@@ -75,6 +76,7 @@
             this.txtTimKiemKhach = new System.Windows.Forms.TextBox();
             this.btnXoaKhach = new System.Windows.Forms.Button();
             this.dtgvDanhSachKhachHang = new System.Windows.Forms.DataGridView();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvLoaiMon)).BeginInit();
@@ -82,6 +84,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtgvMonAn)).BeginInit();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvDanhSachKhachHang)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -618,6 +621,10 @@
             this.dtgvDanhSachKhachHang.TabIndex = 0;
             this.dtgvDanhSachKhachHang.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgvDanhSachKhachHang_CellClick);
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
             // frmDanhMuc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -636,6 +643,7 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvDanhSachKhachHang)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -689,5 +697,6 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox txtDonGia;
         private System.Windows.Forms.Button btnLamMoiMon;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }

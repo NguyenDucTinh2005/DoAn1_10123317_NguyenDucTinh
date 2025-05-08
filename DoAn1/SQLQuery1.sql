@@ -54,24 +54,12 @@ CREATE TABLE ChiTietDonHang (
     FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE LichSuDonHang (
-    MaDonHang CHAR(10),
-    NgayDat DATETIME,
-    MaKhachHang CHAR(10),
-    MaMonAn CHAR(10),
-    TenMonAn NVARCHAR(100),
-    SoLuong INT,
-    ThanhTien FLOAT,
-    ThoiGianDat DATETIME,
 
-    -- Liên kết đến KhachHang
-    FOREIGN KEY (MaKhachHang) REFERENCES KhachHang(MaKhachHang) 
-        ON UPDATE CASCADE ON DELETE CASCADE,
 
-    -- Liên kết đến MonAn
-    FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn)
-        ON UPDATE CASCADE ON DELETE CASCADE
-);
+
+
+
+
 
 --Chen duwx lieeuj
 --Bang Tai khoan
@@ -165,6 +153,34 @@ Select*from TaiKhoan
 
 select*from  DonHang
 
+
+-- Chèn dữ liệu vào bảng KhachHang
+INSERT INTO KhachHang (MaKhachHang, TenKhachHang, SoDienThoai, DiaChi)
+VALUES
+('KH001', N'Nguyễn Văn A', '0912345678', N'123 Đường Lê Lợi, Quận 1, TP.HCM'),
+('KH002', N'Trần Thị B', '0987654321', N'456 Đường Trần Hưng Đạo, Quận 5, TP.HCM'),
+('KH003', N'Lê Văn C', '0901234567', N'789 Đường Nguyễn Huệ, Quận 1, TP.HCM');
+select*from khachhang
+-- Chèn dữ liệu vào bảng DonHang
+INSERT INTO DonHang (MaDonHang, NgayDat, MaKhachHang)
+VALUES
+('DH004', '2025-04-25 10:00:00', 'KH001'),
+('DH002', '2025-04-26 14:30:00', 'KH002'),
+('DH003', '2025-04-26 19:00:00', 'KH003');
+select*from DonHang
+-- Chèn dữ liệu vào bảng ChiTietDonHang
+INSERT INTO ChiTietDonHang (MaDonHang, MaMonAn, SoLuong, ThanhTien, ThoiGianDat)
+VALUES
+('DH004', 'MA001', 2, 90000, '2025-04-25 10:05:00'),  -- Hamburger bò
+('DH003', 'MA011', 1, 40000, '2025-04-25 10:06:00'),  -- Trà sữa trân châu
+
+('DH002', 'MA031', 1, 60000, '2025-04-26 14:35:00'),  -- Cơm tấm sườn bì chả
+('DH002', 'MA018', 2, 40000, '2025-04-26 14:36:00'),  -- Nước ngọt có ga
+
+('DH003', 'MA045', 1, 70000, '2025-04-26 19:05:00'),  -- Gà nướng BBQ
+('DH003', 'MA024', 2, 100000, '2025-04-26 19:10:00'); -- Bánh tiramisu
+
+
 CREATE TRIGGER trg_XoaKhachHangKhiXoaDonHang
 ON DonHang
 AFTER DELETE
@@ -184,3 +200,45 @@ BEGIN
         )
     );
 END;
+
+SELECT 
+    dh.MaDonHang,
+    dh.NgayDat,
+    kh.MaKhachHang,
+    kh.TenKhachHang,
+    kh.SoDienThoai,
+    ma.MaMonAn,
+    ma.TenMonAn,
+    ctdh.SoLuong,
+    ctdh.ThanhTien,
+    ctdh.ThoiGianDat
+FROM 
+    DonHang dh
+INNER JOIN 
+    KhachHang kh ON dh.MaKhachHang = kh.MaKhachHang
+INNER JOIN 
+    ChiTietDonHang ctdh ON dh.MaDonHang = ctdh.MaDonHang
+INNER JOIN 
+    MonAn ma ON ctdh.MaMonAn = ma.MaMonAn
+ORDER BY 
+    dh.NgayDat DESC, ctdh.ThoiGianDat DESC;
+
+
+CREATE PROCEDURE SP_XoaLichSuDatHang
+    @MaDonHang CHAR(10)
+AS
+BEGIN
+    DELETE FROM ChiTietDonHang WHERE MaDonHang = @MaDonHang;
+    DELETE FROM DonHang WHERE MaDonHang = @MaDonHang;
+END
+
+select*from ChiTietDonHang
+
+SELECT * FROM DonHang WHERE MaDonHang = '9773165049';
+SELECT * FROM KhachHang WHERE MaKhachHang = '9A18356EC7';
+select * from ChiTietDonHang
+
+
+
+
+

@@ -50,54 +50,64 @@
             // 
             // btnHuyDon
             // 
+            this.btnHuyDon.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnHuyDon.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btnHuyDon.Location = new System.Drawing.Point(513, 444);
             this.btnHuyDon.Name = "btnHuyDon";
-            this.btnHuyDon.Size = new System.Drawing.Size(88, 53);
+            this.btnHuyDon.Size = new System.Drawing.Size(129, 53);
             this.btnHuyDon.TabIndex = 1;
             this.btnHuyDon.Text = "Hủy đơn";
-            this.btnHuyDon.UseVisualStyleBackColor = true;
+            this.btnHuyDon.UseVisualStyleBackColor = false;
             this.btnHuyDon.Click += new System.EventHandler(this.btnHuyDon_Click);
             // 
             // btnXacNhan
             // 
+            this.btnXacNhan.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnXacNhan.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btnXacNhan.Location = new System.Drawing.Point(278, 444);
             this.btnXacNhan.Name = "btnXacNhan";
-            this.btnXacNhan.Size = new System.Drawing.Size(88, 53);
+            this.btnXacNhan.Size = new System.Drawing.Size(135, 53);
             this.btnXacNhan.TabIndex = 2;
             this.btnXacNhan.Text = "Xác nhận ";
-            this.btnXacNhan.UseVisualStyleBackColor = true;
+            this.btnXacNhan.UseVisualStyleBackColor = false;
             this.btnXacNhan.Click += new System.EventHandler(this.btnXacNhan_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.label1.Location = new System.Drawing.Point(181, 62);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 16);
+            this.label1.Size = new System.Drawing.Size(165, 27);
             this.label1.TabIndex = 3;
             this.label1.Text = "Mã đơn hàng:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.label2.Location = new System.Drawing.Point(181, 114);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 16);
+            this.label2.Size = new System.Drawing.Size(155, 27);
             this.label2.TabIndex = 4;
             this.label2.Text = "Khách hàng:";
             // 
             // txtMaDonHang
             // 
-            this.txtMaDonHang.Location = new System.Drawing.Point(312, 56);
+            this.txtMaDonHang.BackColor = System.Drawing.Color.IndianRed;
+            this.txtMaDonHang.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtMaDonHang.Location = new System.Drawing.Point(366, 55);
             this.txtMaDonHang.Name = "txtMaDonHang";
-            this.txtMaDonHang.Size = new System.Drawing.Size(149, 22);
+            this.txtMaDonHang.Size = new System.Drawing.Size(149, 33);
             this.txtMaDonHang.TabIndex = 5;
             // 
             // txtKhachHang
             // 
-            this.txtKhachHang.Location = new System.Drawing.Point(312, 108);
+            this.txtKhachHang.BackColor = System.Drawing.Color.IndianRed;
+            this.txtKhachHang.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtKhachHang.Location = new System.Drawing.Point(366, 111);
             this.txtKhachHang.Name = "txtKhachHang";
-            this.txtKhachHang.Size = new System.Drawing.Size(149, 22);
+            this.txtKhachHang.Size = new System.Drawing.Size(149, 33);
             this.txtKhachHang.TabIndex = 6;
             // 
             // frmDonHang

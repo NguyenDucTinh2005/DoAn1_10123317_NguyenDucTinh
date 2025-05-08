@@ -1,6 +1,5 @@
-﻿using DoAn1.DTO;
+﻿using BUS;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,30 +8,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BUS;
-using DAL;
-using System.Data.SqlClient;
-using DTO;
 
 namespace DoAn1
 {
-    public partial class frmDatHang : Form
+    public partial class frmBanHangTaiQuan : Form
     {
-        
         private string selectedMonAn;
         private float selectedGia;
         private ListViewItem selectedItem;
         MonAnBUS gioHangBUS = new MonAnBUS();
-
-        public frmDatHang()
+        public frmBanHangTaiQuan()
         {
             InitializeComponent();
             supperListDonHang();
             LoadMonAn();
             LoadLoaiMon();
-            this.Load += frmDatHang_Load;
-        }
+            this.Load += frmBanHangTaiQuan_Load;
 
+        }
         private void supperListDonHang()
         {
             lsvHoaDon.Clear();
@@ -61,23 +54,6 @@ namespace DoAn1
             cboLoaiMon.DataSource = dtLoaiMon;
             dtgvDanhSachMon.Columns["MoTa"].Width = 210;
         }
-
-        private void btnDatMon_Click(object sender, EventArgs e)
-        {
-            if (lsvHoaDon.Items.Count == 0)
-            {
-                MessageBox.Show("Vui lòng thêm món ăn vào giỏ hàng trước khi đặt hàng.", "Thông báo");
-                return;
-            }
-
-            // Tạo danh sách các ListViewItem từ lsvHoaDon
-            List<ListViewItem> cartItems = lsvHoaDon.Items.Cast<ListViewItem>().ToList();
-
-            // Truyền danh sách sang frmThongTinNhanHang
-            frmThongTinNhanHang f = new frmThongTinNhanHang(cartItems);
-            f.ShowDialog();
-        }
-
         private void AddMonAnToHoaDon(string tenMon, string gia, int soLuong)
         {
             bool daCoTrongGio = false;
@@ -108,6 +84,27 @@ namespace DoAn1
             UpdateTongTien();
         }
 
+        private void btnTimKiem_Click(object sender, EventArgs e)
+        {
+            string keyworld = txtTimKiem.Text;
+            DataTable dataTable = gioHangBUS.searchMonAn(keyworld);
+            if (string.IsNullOrEmpty(keyworld))
+            {
+                MessageBox.Show("Vui lòng nhập tên món ăn cần tìm kiếm");
+            }
+            else
+            {
+                dtgvDanhSachMon.DataSource = dataTable;
+                if (dataTable.Rows.Count == 0)
+                {
+                    MessageBox.Show(string.Format("Không tìm thấy loại món '{0}'!", keyworld), "Thông báo");
+                }
+                else
+                {
+                    dtgvDanhSachMon.DataSource = dataTable;
+                }
+            }
+        }
 
         private void btnThemMon_Click(object sender, EventArgs e)
         {
@@ -141,29 +138,6 @@ namespace DoAn1
             MessageBox.Show("Không tìm thấy món ăn trong danh sách.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-
-        private void btnTimKiem_Click(object sender, EventArgs e)
-        {
-            string keyworld = txtTimKiem.Text;
-            DataTable dataTable = gioHangBUS.searchMonAn(keyworld);
-            if (string.IsNullOrEmpty(keyworld))
-            {
-                MessageBox.Show("Vui lòng nhập tên món ăn cần tìm kiếm");
-            }
-            else
-            {
-                dtgvDanhSachMon.DataSource = dataTable;
-                if (dataTable.Rows.Count == 0)
-                {
-                    MessageBox.Show(string.Format("Không tìm thấy loại món '{0}'!", keyworld), "Thông báo");
-                }
-                else
-                {
-                    dtgvDanhSachMon.DataSource = dataTable;
-                }
-            }
-        }
-
         private void dtgvDanhSachMon_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -191,7 +165,7 @@ namespace DoAn1
             }
         }
 
-        private void frmDatHang_Load(object sender, EventArgs e)
+        private void frmBanHangTaiQuan_Load(object sender, EventArgs e)
         {
             LoadMonAn();
         }
@@ -206,9 +180,11 @@ namespace DoAn1
             }
         }
 
-        private void numSoLuong_ValueChanged(object sender, EventArgs e)
+        private void nmSoLuong_ValueChanged(object sender, EventArgs e)
         {
+
             UpdateTongTien();
+
         }
 
         private void btnXoaMon_Click(object sender, EventArgs e)
@@ -236,7 +212,6 @@ namespace DoAn1
             }
             UpdateTongTien();
         }
-
         private void UpdateTongTien()
         {
             double tongTien = 0;
@@ -249,7 +224,16 @@ namespace DoAn1
             lblTongTien.Text = tongTien.ToString("N0") + " VNĐ";
         }
 
+        private void btnThanhToan_Click(object sender, EventArgs e)
+        {
+            if (lsvHoaDon.Items.Count == 0)
+            {
+                MessageBox.Show("Vui lòng thêm món ăn vào giỏ hàng trước khi đặt hàng.", "Thông báo");
+                return;
+            }
 
-       
+            frmHoaDonTQ frmHoaDonTQ = new frmHoaDonTQ();
+            frmHoaDonTQ.ShowDialog();
+        }
     }
 }
