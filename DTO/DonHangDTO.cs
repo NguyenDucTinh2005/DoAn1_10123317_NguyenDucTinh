@@ -15,11 +15,12 @@ namespace DTO
         string maDonHang;
         string maKhachHang;
         DateTime ngayDat;
+        string trangThai;
 
         public string MaDonHang { get => maDonHang; set => maDonHang = value; }
         public string MaKhachHang { get => maKhachHang; set => maKhachHang = value; }
         public DateTime NgayDat { get => ngayDat; set => ngayDat = value; }
-       
+        public string TrangThai { get => trangThai; set => trangThai = value; }
 
         public DonHangDTO(string MaDonHang, string MaKhachHang, DateTime NgayDat)
         {
@@ -28,7 +29,14 @@ namespace DTO
             this.NgayDat = NgayDat;
         }
 
-      
+        public DonHangDTO(string MaDonHang, string MaKhachHang, DateTime NgayDat, string TrangThai)
+        {
+            this.MaDonHang = MaDonHang;
+            this.MaKhachHang = MaKhachHang;
+            this.NgayDat = NgayDat;
+            this.TrangThai = TrangThai;
+        }
+
         public DonHangDTO(DataTable row)
         {
             this.MaDonHang = row.Rows[0]["MaDonHang"].ToString();

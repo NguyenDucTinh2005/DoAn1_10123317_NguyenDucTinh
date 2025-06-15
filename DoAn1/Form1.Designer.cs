@@ -101,7 +101,7 @@
             this.txtMatKhau.Name = "txtMatKhau";
             this.txtMatKhau.Size = new System.Drawing.Size(180, 30);
             this.txtMatKhau.TabIndex = 4;
-            this.txtMatKhau.Text = "adim";
+            this.txtMatKhau.Text = "admin";
             this.txtMatKhau.UseSystemPasswordChar = true;
             // 
             // btnDangNhap

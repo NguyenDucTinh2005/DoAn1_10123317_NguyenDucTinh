@@ -9,8 +9,8 @@ namespace DTO
 {
     public class ChiTietDonHangDTO
     {
-         string maDonHang;
-         string maMonAn;
+        string maDonHang;
+        string maMonAn;
         int soLuong;
         float thanhTien;
         DateTime thoiGianDat;
@@ -24,7 +24,7 @@ namespace DTO
 
         public ChiTietDonHangDTO(string maDonHang, string maMonAn, int soLuong, float thanhTien, DateTime thoiGianDat)
         {
-           this. MaDonHang = maDonHang;
+            this.MaDonHang = maDonHang;
             this.MaMonAn = maMonAn;
             this.SoLuong = soLuong;
             this.ThanhTien = thanhTien;

@@ -56,5 +56,9 @@ namespace BUS
         {
             return MonAnDAL.GetMaMonAnByTen(tenMonAn);
         }
+        public string GetTenMonAnByMa(string maMonAn)
+        {
+            return MonAnDAL.GetTenMonAnByMa(maMonAn);
+        }
     }
 }

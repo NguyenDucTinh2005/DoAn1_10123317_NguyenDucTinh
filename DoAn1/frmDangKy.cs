@@ -60,7 +60,7 @@ namespace DoAn1
             if (!isValid) return;
 
             // Đăng ký
-            TaiKhoanDTO tk = new TaiKhoanDTO(txtTenDangNhap.Text, txtMatKhau.Text, txtSoDienThoai.Text, "user");
+            TaiKhoanDTO tk = new TaiKhoanDTO(txtTenDangNhap.Text, txtMatKhau.Text, txtSoDienThoai.Text, "Khách hàng");
             if (new TaiKhoanBus().DangKyTaiKhoan(tk))
             {
                 MessageBox.Show("Đăng ký thành công!");

@@ -22,6 +22,10 @@ namespace BUS
         {
             return DonHangDAL.insertDonHang(donHang);
         }
+        public bool insertDonHang2(DonHangDTO donHang)
+        {
+            return DonHangDAL.insertDonHang2(donHang);
+        }
         public bool deleteDonHang(string maDonHang)
         {
             return DonHangDAL.deleteDonHang(maDonHang);
@@ -31,6 +35,10 @@ namespace BUS
             return DonHangDAL.SearchDonHang(keyword);
         }
 
-        
+        public bool updateTrangThaiDonHang(string maDonHang, string trangThai)
+        {
+           return DonHangDAL.updateTrangThaiDonHang(maDonHang, trangThai);
+        }
+       
     }
 }

@@ -28,9 +28,10 @@ namespace DoAn1
         private void LoadTaiKhoan()
         {
             dtgvTaiKhoan.DataSource = TaiKhoanBus.getAllTaiKhoan();
-            cboQuyen.DataSource = TaiKhoanBus.getAllTaiKhoan();
-            cboQuyen.DisplayMember = "Quyen";
-            cboQuyen.ValueMember = "Quyen";
+
+            // Sửa lại: Không dùng ValueMember
+            List<string> quyenList = new List<string> { "Quản trị viên", "Nhân viên", "Khách hàng" };
+            cboQuyen.DataSource = quyenList;
         }
         private void dtgvTaiKhoan_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -41,12 +42,28 @@ namespace DoAn1
                 txtTenDangNhap.Text = row.Cells["TenDangNhap"].Value.ToString();
                 txtMatKhau.Text = row.Cells["MatKhau"].Value.ToString();
                 txtSoDienThoai.Text = row.Cells["SoDienThoai"].Value.ToString();
-                cboQuyen.SelectedValue = row.Cells["Quyen"].Value.ToString();
+                cboQuyen.SelectedItem = row.Cells["Quyen"].Value.ToString();
+
             }
         }
         private void btnThem_Click(object sender, EventArgs e)
         {
             TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(txtTenDangNhap.Text, txtMatKhau.Text, txtSoDienThoai.Text, cboQuyen.SelectedValue.ToString());
+
+            // Nếu quyền là "Khách hàng" hoặc "Nhân viên", tự động tạo MaKhachHang và liên kết
+            if (taiKhoanDTO.quyen == "Khách hàng" || taiKhoanDTO.quyen == "Nhân viên"|| taiKhoanDTO.quyen == "Quản trị viên")
+            {
+                string maKhachHang = Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
+                KhachHangDTO khachHang = new KhachHangDTO(maKhachHang, txtTenDangNhap.Text, "", txtSoDienThoai.Text);
+                KhachHangBUS khachhangBUS= new KhachHangBUS();
+                if (!khachhangBUS.insertKhachHang(khachHang))
+                {
+                    MessageBox.Show("Lỗi khi tạo thông tin khách hàng!");
+                    return;
+                }
+                taiKhoanDTO.MaKhachHang1 = maKhachHang;
+            }
+
             if (TaiKhoanBus.insertTaiKhoan(taiKhoanDTO))
             {
                 MessageBox.Show("Thêm thành công!");
@@ -57,6 +74,7 @@ namespace DoAn1
                 MessageBox.Show("Thêm thất bại!");
             }
         }
+
 
 
 
@@ -72,8 +90,7 @@ namespace DoAn1
                 txtTenDangNhap.Text = "";
                 txtMatKhau.Text = "";
                 txtSoDienThoai.Text = "";
-                cboQuyen.SelectedValue = "";
-
+               
             }
             else
             {

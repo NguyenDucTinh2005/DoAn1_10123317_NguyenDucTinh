@@ -60,7 +60,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label2.Location = new System.Drawing.Point(176, 34);
+            this.label2.Location = new System.Drawing.Point(107, 34);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(153, 23);
             this.label2.TabIndex = 0;
@@ -70,7 +70,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label3.Location = new System.Drawing.Point(176, 97);
+            this.label3.Location = new System.Drawing.Point(107, 97);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(130, 23);
             this.label3.TabIndex = 0;
@@ -80,7 +80,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label4.Location = new System.Drawing.Point(176, 170);
+            this.label4.Location = new System.Drawing.Point(107, 170);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(170, 23);
             this.label4.TabIndex = 0;
@@ -90,7 +90,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label5.Location = new System.Drawing.Point(176, 237);
+            this.label5.Location = new System.Drawing.Point(107, 237);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(339, 23);
             this.label5.TabIndex = 0;
@@ -100,27 +100,27 @@
             // 
             this.txtTenNguoiNhan.BackColor = System.Drawing.Color.Silver;
             this.txtTenNguoiNhan.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtTenNguoiNhan.Location = new System.Drawing.Point(385, 34);
+            this.txtTenNguoiNhan.Location = new System.Drawing.Point(316, 34);
             this.txtTenNguoiNhan.Name = "txtTenNguoiNhan";
-            this.txtTenNguoiNhan.Size = new System.Drawing.Size(164, 30);
+            this.txtTenNguoiNhan.Size = new System.Drawing.Size(241, 30);
             this.txtTenNguoiNhan.TabIndex = 1;
             // 
             // txtSoDienThoai
             // 
             this.txtSoDienThoai.BackColor = System.Drawing.Color.Silver;
             this.txtSoDienThoai.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtSoDienThoai.Location = new System.Drawing.Point(385, 97);
+            this.txtSoDienThoai.Location = new System.Drawing.Point(316, 97);
             this.txtSoDienThoai.Name = "txtSoDienThoai";
-            this.txtSoDienThoai.Size = new System.Drawing.Size(164, 30);
+            this.txtSoDienThoai.Size = new System.Drawing.Size(241, 30);
             this.txtSoDienThoai.TabIndex = 1;
             // 
             // txtDiaChiNhanHang
             // 
             this.txtDiaChiNhanHang.BackColor = System.Drawing.Color.Silver;
             this.txtDiaChiNhanHang.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtDiaChiNhanHang.Location = new System.Drawing.Point(385, 170);
+            this.txtDiaChiNhanHang.Location = new System.Drawing.Point(316, 170);
             this.txtDiaChiNhanHang.Name = "txtDiaChiNhanHang";
-            this.txtDiaChiNhanHang.Size = new System.Drawing.Size(164, 30);
+            this.txtDiaChiNhanHang.Size = new System.Drawing.Size(241, 30);
             this.txtDiaChiNhanHang.TabIndex = 1;
             // 
             // panel1
@@ -142,7 +142,7 @@
             // btnDatHang
             // 
             this.btnDatHang.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnDatHang.Location = new System.Drawing.Point(336, 276);
+            this.btnDatHang.Location = new System.Drawing.Point(267, 276);
             this.btnDatHang.Name = "btnDatHang";
             this.btnDatHang.Size = new System.Drawing.Size(168, 43);
             this.btnDatHang.TabIndex = 2;

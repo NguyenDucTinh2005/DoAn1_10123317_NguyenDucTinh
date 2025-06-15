@@ -23,10 +23,11 @@ namespace DoAn1
         private float selectedGia;
         private ListViewItem selectedItem;
         MonAnBUS gioHangBUS = new MonAnBUS();
-
-        public frmDatHang()
+        private string maKhachHang; // Thay tenDangNhap bằng maKhachHang
+        public frmDatHang(string maKhachHang)
         {
             InitializeComponent();
+            this.maKhachHang = maKhachHang;
             supperListDonHang();
             LoadMonAn();
             LoadLoaiMon();
@@ -70,11 +71,8 @@ namespace DoAn1
                 return;
             }
 
-            // Tạo danh sách các ListViewItem từ lsvHoaDon
             List<ListViewItem> cartItems = lsvHoaDon.Items.Cast<ListViewItem>().ToList();
-
-            // Truyền danh sách sang frmThongTinNhanHang
-            frmThongTinNhanHang f = new frmThongTinNhanHang(cartItems);
+            frmThongTinNhanHang f = new frmThongTinNhanHang(cartItems, maKhachHang); // Truyền maKhachHang
             f.ShowDialog();
         }
 

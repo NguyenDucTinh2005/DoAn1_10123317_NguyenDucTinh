@@ -1,24 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
-using System.Data.SqlClient;
-using DTO;
 using DAL;
+using DTO;
+
 namespace BUS
 {
     public class LichSuDatHangBUS
     {
-        LichSuDatHangDAL lichSuDatHangDAL = new LichSuDatHangDAL();
+        private LichSuDatHangDAL lichSuDatHangDAL = new LichSuDatHangDAL();
+
         public DataTable getAllLichSuDatHang()
         {
             return lichSuDatHangDAL.getAllLichSuDatHang();
         }
-       public bool deleteLichSuDatHang(string maDonHang)
+
+        public DataTable getLichSuDatHangByMaDonHang(string maDonHang)
         {
-            return lichSuDatHangDAL.deleteLichSuDatHang(maDonHang);
+            return lichSuDatHangDAL.getLichSuDatHangByMaDonHang(maDonHang);
+        }
+
+        public bool insertLichSuDatHang(LichSuDatHangDTO dto)
+        {
+            return lichSuDatHangDAL.insertLichSuDatHang(dto);
+        }
+
+        public bool deleteLichSuDatHangByMaDonHang(string maDonHang)
+        {
+            return lichSuDatHangDAL.deleteLichSuDatHangByMaDonHang(maDonHang);
+        }
+
+        public DataTable getLichSuDatHangByMaKhachHang(string maKhachHang)
+        {
+            return lichSuDatHangDAL.getLichSuDatHangByMaKhachHang(maKhachHang);
         }
     }
 }

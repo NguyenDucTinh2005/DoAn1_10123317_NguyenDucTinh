@@ -51,5 +51,11 @@ namespace BUS
         {
             return khachHang.DeleteKH(maKhachHang);
         }
+     
+        public bool UpdateKhachHang(KhachHangDTO khachHang)
+        {
+            return this.khachHang.UpdateKhachHang(khachHang);
+        }
+
     }
 }

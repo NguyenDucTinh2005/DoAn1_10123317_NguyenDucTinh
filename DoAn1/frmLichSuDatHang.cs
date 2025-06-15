@@ -17,26 +17,100 @@ namespace DoAn1
     {
         LichSuDatHangBUS lichSuDatHangBUS = new LichSuDatHangBUS();
         DonHangBUS donHangBUS = new DonHangBUS();
-        KhachHangBUS khachHangBUS = new KhachHangBUS();
         ChiTietDonHangBUS chiTietDonHangBUS = new ChiTietDonHangBUS();
+        private string quyenNguoiDung;
+        private string maKhachHang;
 
-        public frmLichSuDatHang()
+        public frmLichSuDatHang(string quyenNguoiDung, string maKhachHang)
         {
             InitializeComponent();
-            LoadLichSuDatHang();
+
+            this.quyenNguoiDung = quyenNguoiDung;
+            this.maKhachHang = maKhachHang;
+
+            if (quyenNguoiDung != "Quản trị viên" && string.IsNullOrEmpty(maKhachHang))
+            {
+                MessageBox.Show("Tài khoản của bạn chưa được liên kết với thông tin khách hàng. Vui lòng đặt hàng trước để xem lịch sử đặt hàng.",
+                    "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            LoadLichSuTheoNguoiDung();
+            SetupListView();
         }
 
-        private void LoadLichSuDatHang()
+        private void LoadLichSuTheoNguoiDung()
         {
-            dtgvLichSuDatHang.DataSource = lichSuDatHangBUS.getAllLichSuDatHang();
+            DataTable dt;
+            if (quyenNguoiDung != "Quản trị viên" && !string.IsNullOrEmpty(maKhachHang))
+            {
+                dt = lichSuDatHangBUS.getLichSuDatHangByMaKhachHang(maKhachHang);
+            }
+            else
+            {
+                dt = lichSuDatHangBUS.getAllLichSuDatHang();
+            }
+
+            // Nhóm các bản ghi theo MaDonHang và lấy bản ghi đầu tiên cho mỗi MaDonHang
+            var distinctRows = dt.AsEnumerable()
+                .GroupBy(row => row.Field<string>("MaDonHang"))
+                .Select(g => g.First());
+
+            // Tạo DataTable mới chỉ chứa các cột cần thiết
+            DataTable distinctDt = new DataTable();
+            distinctDt.Columns.Add("MaDonHang", typeof(string));
+            distinctDt.Columns.Add("NgayDat", typeof(DateTime));
+            distinctDt.Columns.Add("ThoiGianDat", typeof(DateTime));
+
+            foreach (var row in distinctRows)
+            {
+                distinctDt.Rows.Add(
+                    row.Field<string>("MaDonHang"),
+                    row.Field<DateTime>("NgayDat"),
+                    row.Field<DateTime>("ThoiGianDat")
+                );
+            }
+
+            dtgvLichSuDatHang.DataSource = distinctDt;
+
+            // Đặt tên cột cho DataGridView
             dtgvLichSuDatHang.Columns["MaDonHang"].HeaderText = "Mã Đơn Hàng";
             dtgvLichSuDatHang.Columns["NgayDat"].HeaderText = "Ngày Đặt";
-            dtgvLichSuDatHang.Columns["TenKhachHang"].HeaderText = "Tên Khách Hàng";
-            dtgvLichSuDatHang.Columns["MaMonAn"].HeaderText = "Mã Món Ăn";
-            dtgvLichSuDatHang.Columns["TenMonAn"].HeaderText = "Tên Món Ăn";
-            dtgvLichSuDatHang.Columns["SoLuong"].HeaderText = "Số Lượng";
-            dtgvLichSuDatHang.Columns["ThanhTien"].HeaderText = "Thành Tiền";
             dtgvLichSuDatHang.Columns["ThoiGianDat"].HeaderText = "Thời Gian Đặt";
+        }
+
+        private void SetupListView()
+        {
+            lsvThongTinDonHang.View = View.Details;
+            lsvThongTinDonHang.FullRowSelect = true;
+            lsvThongTinDonHang.Columns.Add("Tên Món Ăn", 100);
+            lsvThongTinDonHang.Columns.Add("Giá Bán", 90);
+            lsvThongTinDonHang.Columns.Add("Số Lượng", 70);
+            lsvThongTinDonHang.Columns.Add("Thành Tiền", 90);
+        }
+
+        private void HienThiChiTietDonHang(string maDonHang)
+        {
+            lsvThongTinDonHang.Items.Clear();
+            DataTable dt = lichSuDatHangBUS.getLichSuDatHangByMaDonHang(maDonHang);
+
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                MessageBox.Show("Không tìm thấy chi tiết đơn hàng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                float thanhTien = Convert.ToSingle(row["ThanhTien"]);
+                float soLuong = Convert.ToSingle(row["SoLuong"]);
+                float giaBan = thanhTien / soLuong;
+
+                ListViewItem item = new ListViewItem(row["TenMonAn"].ToString());
+                item.SubItems.Add(giaBan.ToString("N0"));
+                item.SubItems.Add(soLuong.ToString());
+                item.SubItems.Add(thanhTien.ToString("N0"));
+                lsvThongTinDonHang.Items.Add(item);
+            }
         }
 
         private void btnTimKiem_Click(object sender, EventArgs e)
@@ -45,22 +119,49 @@ namespace DoAn1
             if (string.IsNullOrEmpty(keyword))
             {
                 MessageBox.Show("Vui lòng nhập từ khóa tìm kiếm!", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                LoadLichSuDatHang();
+                LoadLichSuTheoNguoiDung();
                 return;
             }
 
-            DataTable searchResult = lichSuDatHangBUS.getAllLichSuDatHang();
-            DataView dv = searchResult.DefaultView;
-            dv.RowFilter = $"MaDonHang LIKE '%{keyword}%' OR TenMonAn LIKE '%{keyword}%'";
-
-            if (dv.Count > 0)
+            DataTable dt;
+            if (quyenNguoiDung != "Quản trị viên" && !string.IsNullOrEmpty(maKhachHang))
             {
-                dtgvLichSuDatHang.DataSource = dv.ToTable();
+                dt = lichSuDatHangBUS.getLichSuDatHangByMaKhachHang(maKhachHang);
             }
             else
             {
+                dt = lichSuDatHangBUS.getAllLichSuDatHang();
+            }
+
+            DataView dv = dt.DefaultView;
+            dv.RowFilter = $"MaDonHang LIKE '%{keyword}%' OR TenMonAn LIKE '%{keyword}%'";
+
+            // Nhóm các bản ghi theo MaDonHang và lấy bản ghi đầu tiên khi tìm kiếm
+            var distinctRows = dv.ToTable().AsEnumerable()
+                .GroupBy(row => row.Field<string>("MaDonHang"))
+                .Select(g => g.First());
+
+            // Tạo DataTable mới chỉ chứa các cột cần thiết
+            DataTable distinctDt = new DataTable();
+            distinctDt.Columns.Add("MaDonHang", typeof(string));
+            distinctDt.Columns.Add("NgayDat", typeof(DateTime));
+            distinctDt.Columns.Add("ThoiGianDat", typeof(DateTime));
+
+            foreach (var row in distinctRows)
+            {
+                distinctDt.Rows.Add(
+                    row.Field<string>("MaDonHang"),
+                    row.Field<DateTime>("NgayDat"),
+                    row.Field<DateTime>("ThoiGianDat")
+                );
+            }
+
+            dtgvLichSuDatHang.DataSource = distinctDt;
+
+            if (distinctDt.Rows.Count == 0)
+            {
                 MessageBox.Show($"Không tìm thấy đơn hàng với từ khóa '{keyword}'!", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadLichSuDatHang();
+                LoadLichSuTheoNguoiDung();
             }
         }
 
@@ -76,11 +177,12 @@ namespace DoAn1
             DialogResult result = MessageBox.Show($"Bạn có chắc muốn xóa lịch sử đơn hàng {maDonHang}?", "Xác Nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                if (lichSuDatHangBUS.deleteLichSuDatHang(maDonHang))
+                if (lichSuDatHangBUS.deleteLichSuDatHangByMaDonHang(maDonHang))
                 {
                     MessageBox.Show("Xóa lịch sử đơn hàng thành công!", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadLichSuDatHang();
+                    LoadLichSuTheoNguoiDung();
                     txtMaDonHang.Clear();
+                    lsvThongTinDonHang.Items.Clear();
                 }
                 else
                 {
@@ -98,35 +200,21 @@ namespace DoAn1
                 return;
             }
 
-            // Lấy chi tiết đơn hàng
-            DataTable orderDetails = lichSuDatHangBUS.getAllLichSuDatHang();
-            DataRow[] selectedOrder = orderDetails.Select($"MaDonHang = '{maDonHang}'");
+            DataTable orderDetails = lichSuDatHangBUS.getLichSuDatHangByMaDonHang(maDonHang);
 
-            if (selectedOrder.Length == 0)
+            if (orderDetails.Rows.Count == 0)
             {
                 MessageBox.Show($"Không tìm thấy chi tiết đơn hàng cho mã {maDonHang}!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Tạo danh sách chi tiết đơn hàng để truyền vào frmThongTinNhanHang
             List<ChiTietDonHangDTO> reOrderItems = new List<ChiTietDonHangDTO>();
-            foreach (DataRow row in selectedOrder)
+            foreach (DataRow row in orderDetails.Rows)
             {
-                double thanhTien;
-                if (row["ThanhTien"] == DBNull.Value || string.IsNullOrEmpty(row["ThanhTien"].ToString()))
-                {
-                    MessageBox.Show($"Giá trị Thành Tiền không hợp lệ hoặc rỗng cho món {row["MaMonAn"]}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (!double.TryParse(row["ThanhTien"].ToString(), out thanhTien))
-                {
-                    MessageBox.Show($"Không thể chuyển đổi giá trị Thành Tiền cho món {row["MaMonAn"]}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
+                double thanhTien = Convert.ToDouble(row["ThanhTien"]);
                 reOrderItems.Add(new ChiTietDonHangDTO
                 {
-                    MaDonHang = maDonHang, // Sẽ được cập nhật trong frmThongTinNhanHang
+                    MaDonHang = maDonHang,
                     MaMonAn = row["MaMonAn"].ToString(),
                     SoLuong = Convert.ToInt32(row["SoLuong"]),
                     ThanhTien = (float)thanhTien,
@@ -140,44 +228,12 @@ namespace DoAn1
                 return;
             }
 
-            // Gọi frmThongTinNhanHang với danh sách chi tiết đơn hàng
-            frmThongTinNhanHang f = new frmThongTinNhanHang(reOrderItems);
+            frmThongTinNhanHang f = new frmThongTinNhanHang(reOrderItems, maKhachHang); // Truyền maKhachHang hiện tại
             if (f.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    // Lấy thông tin khách hàng từ thuộc tính công khai
-                    string tenNguoiNhan = f.TenNguoiNhan;
-                    string soDienThoai = f.SoDienThoai;
-                    string diaChi = f.DiaChi;
-
-                    // Tạo mã mới
-                    string newMaKhachHang = GenerateID();
-                    string newMaDonHang = GenerateID();
-                    DateTime ngayDat = DateTime.Now;
-
-                    // Thêm khách hàng mới
-                    KhachHangDTO khachHangDTO = new KhachHangDTO(newMaKhachHang, tenNguoiNhan, diaChi, soDienThoai);
-                    if (!khachHangBUS.insertKhachHang(khachHangDTO))
-                    {
-                        throw new Exception("Không thể thêm khách hàng mới.");
-                    }
-
-                    // Thêm đơn hàng mới
-                    DonHangDTO donHangDTO = new DonHangDTO(newMaDonHang, newMaKhachHang, ngayDat);
-                    if (!donHangBUS.insertDonHang(donHangDTO))
-                    {
-                        throw new Exception("Không thể thêm đơn hàng mới.");
-                    }
-
-                    // Thêm chi tiết đơn hàng (đã được xử lý trong frmThongTinNhanHang)
-                    MessageBox.Show("Đặt lại đơn hàng thành công!", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadLichSuDatHang();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi khi đặt lại đơn hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                LoadLichSuTheoNguoiDung(); // Giữ bộ lọc theo người dùng
+                txtMaDonHang.Clear();
+                lsvThongTinDonHang.Items.Clear();
             }
         }
 
@@ -186,13 +242,14 @@ namespace DoAn1
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dtgvLichSuDatHang.Rows[e.RowIndex];
-                txtMaDonHang.Text = row.Cells["MaDonHang"].Value.ToString();
+                string maDonHang = row.Cells["MaDonHang"].Value.ToString();
+                txtMaDonHang.Text = maDonHang;
+                HienThiChiTietDonHang(maDonHang);
             }
         }
 
-        private string GenerateID()
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            return Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
         }
     }
 }

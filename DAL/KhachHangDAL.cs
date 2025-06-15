@@ -103,5 +103,19 @@ namespace DAL
             }
         }
 
+        public bool UpdateKhachHang(KhachHangDTO khachHang)
+        {
+            string query = string.Format(
+                "UPDATE KhachHang SET TenKhachHang = N'{0}', DiaChi = N'{1}', SoDienThoai = '{2}' WHERE MaKhachHang = '{3}'",
+                khachHang.TenKhachHang, khachHang.DiaChi, khachHang.SoDienThoai, khachHang.MaKhachHang);
+
+            con.Open();
+                SqlCommand cmd = new SqlCommand(query, con);
+                int result = cmd.ExecuteNonQuery();
+                con.Close();
+                return result > 0;
+            
+        }
+
     }
 }

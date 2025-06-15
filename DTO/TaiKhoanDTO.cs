@@ -14,13 +14,14 @@ namespace DoAn1.DTO
         private string MatKhau;
         private string SoDienThoai;
         private string Quyen;
-
+        private string MaKhachHang;
         public int maTaiKhoan { get => MaTaiKhoan; set => MaTaiKhoan = value; }
 
         public string TenDangnhap { get => TenDangNhap; set => TenDangNhap = value; }
         public string Matkhau{ get => MatKhau; set => MatKhau = value; }
         public string SoDienthoai { get => SoDienThoai; set => SoDienThoai = value; }
         public string quyen { get => Quyen; set => Quyen = value; }
+        public string MaKhachHang1 { get => MaKhachHang; set => MaKhachHang = value; }
 
         public TaiKhoanDTO(int maTaiKhoan, string tenDangNhap, string matKhau, string soDienThoai, string Quyen)
         {

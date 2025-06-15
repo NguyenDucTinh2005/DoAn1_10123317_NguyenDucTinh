@@ -1,8 +1,11 @@
 ﻿using BUS;
+using DAL;
+using DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,6 +20,8 @@ namespace DoAn1
         private float selectedGia;
         private ListViewItem selectedItem;
         MonAnBUS gioHangBUS = new MonAnBUS();
+        NguyenLieuBUS NguyenLieuBUS = new NguyenLieuBUS();
+
         public frmBanHangTaiQuan()
         {
             InitializeComponent();
@@ -24,8 +29,8 @@ namespace DoAn1
             LoadMonAn();
             LoadLoaiMon();
             this.Load += frmBanHangTaiQuan_Load;
-
         }
+
         private void supperListDonHang()
         {
             lsvHoaDon.Clear();
@@ -54,6 +59,7 @@ namespace DoAn1
             cboLoaiMon.DataSource = dtLoaiMon;
             dtgvDanhSachMon.Columns["MoTa"].Width = 210;
         }
+
         private void AddMonAnToHoaDon(string tenMon, string gia, int soLuong)
         {
             bool daCoTrongGio = false;
@@ -67,6 +73,7 @@ namespace DoAn1
                     int soLuongCu = int.Parse(item.SubItems[2].Text);
                     int soLuongMoi = soLuongCu + soLuong;
                     item.SubItems[2].Text = soLuongMoi.ToString();
+                    item.SubItems[1].Text = (float.Parse(gia) * soLuongMoi).ToString("N0"); // Cập nhật giá
                     daCoTrongGio = true;
                     break;
                 }
@@ -76,7 +83,7 @@ namespace DoAn1
             if (!daCoTrongGio)
             {
                 ListViewItem item = new ListViewItem(tenMon);
-                item.SubItems.Add(gia);
+                item.SubItems.Add(float.Parse(gia).ToString("N0"));
                 item.SubItems.Add(soLuong.ToString());
                 lsvHoaDon.Items.Add(item);
             }
@@ -130,7 +137,6 @@ namespace DoAn1
                 {
                     string gia = row.Cells["GiaBan"].Value.ToString();
                     AddMonAnToHoaDon(tenMon, gia, soLuong);
-                    UpdateTongTien();  // Di chuyển vào đây để chỉ cập nhật khi thêm thành công
                     return;
                 }
             }
@@ -145,7 +151,7 @@ namespace DoAn1
                 DataGridViewRow row = dtgvDanhSachMon.Rows[e.RowIndex];
                 lblTenMon.Text = row.Cells["TenMonAn"].Value.ToString();
                 selectedMonAn = row.Cells["TenMonAn"].Value.ToString();
-                selectedGia = Convert.ToInt64(row.Cells["GiaBan"].Value);
+                selectedGia = Convert.ToSingle(row.Cells["GiaBan"].Value);
             }
         }
 
@@ -154,7 +160,7 @@ namespace DoAn1
             if (cboLoaiMon.SelectedValue != null)
             {
                 string maLoaiMon = cboLoaiMon.SelectedValue.ToString();
-                if (!string.IsNullOrEmpty(maLoaiMon))
+                if (!string.IsNullOrEmpty(maLoaiMon) && maLoaiMon != "System.DBNull")
                 {
                     dtgvDanhSachMon.DataSource = gioHangBUS.getMonAnByLoai(maLoaiMon);
                 }
@@ -182,43 +188,47 @@ namespace DoAn1
 
         private void nmSoLuong_ValueChanged(object sender, EventArgs e)
         {
-
-            UpdateTongTien();
-
+            if (selectedItem != null)
+            {
+                int soLuongMoi = (int)nmSoLuong.Value;
+                if (soLuongMoi > 0)
+                {
+                    selectedItem.SubItems[2].Text = soLuongMoi.ToString();
+                    selectedItem.SubItems[1].Text = (selectedGia * soLuongMoi).ToString("N0");
+                }
+                else
+                {
+                    lsvHoaDon.Items.Remove(selectedItem);
+                    selectedItem = null;
+                }
+                UpdateTongTien();
+            }
         }
 
         private void btnXoaMon_Click(object sender, EventArgs e)
         {
             if (selectedItem == null)
             {
-                MessageBox.Show("Vui lòng chọn món ăn để xóa.");
+                MessageBox.Show("Vui lòng chọn món ăn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            int soLuongHienTai = int.Parse(selectedItem.SubItems[2].Text);
-            int soLuongGiam = Math.Abs((int)nmSoLuong.Value);
-
-            if (soLuongHienTai > soLuongGiam)
-            {
-                int soLuongMoi = soLuongHienTai - soLuongGiam;
-                selectedItem.SubItems[2].Text = soLuongMoi.ToString();
-                float donGia = selectedGia;
-                selectedItem.SubItems[1].Text = (soLuongMoi * donGia).ToString("N0");
-            }
-            else
-            {
-                lsvHoaDon.Items.Remove(selectedItem);
-                selectedItem = null;
-            }
+            lsvHoaDon.Items.Remove(selectedItem);
+            selectedItem = null;
             UpdateTongTien();
         }
+
         private void UpdateTongTien()
         {
             double tongTien = 0;
             foreach (ListViewItem item in lsvHoaDon.Items)
             {
-                double gia = double.Parse(item.SubItems[1].Text);
-                int soLuong = int.Parse(item.SubItems[2].Text);
+                if (!double.TryParse(item.SubItems[1].Text.Replace(",", ""), out double gia) ||
+                    !int.TryParse(item.SubItems[2].Text, out int soLuong))
+                {
+                    MessageBox.Show("Dữ liệu trong giỏ hàng không hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 tongTien += gia * soLuong;
             }
             lblTongTien.Text = tongTien.ToString("N0") + " VNĐ";
@@ -228,12 +238,122 @@ namespace DoAn1
         {
             if (lsvHoaDon.Items.Count == 0)
             {
-                MessageBox.Show("Vui lòng thêm món ăn vào giỏ hàng trước khi đặt hàng.", "Thông báo");
+                MessageBox.Show("Vui lòng thêm món ăn vào giỏ hàng trước khi thanh toán.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            frmHoaDonTQ frmHoaDonTQ = new frmHoaDonTQ();
-            frmHoaDonTQ.ShowDialog();
+            try
+            {
+                // Kiểm tra nguyên liệu trước khi thanh toán
+                ChiTietNguyenLieuBUS ctNguyenLieuBUS = new ChiTietNguyenLieuBUS();
+                NguyenLieuBUS nguyenLieuBUS = new NguyenLieuBUS();
+
+                foreach (ListViewItem item in lsvHoaDon.Items)
+                {
+                    string tenMon = item.SubItems[0].Text;
+                    string maMonAn = gioHangBUS.GetMaMonAnByTen(tenMon);
+                    int soLuong = int.Parse(item.SubItems[2].Text);
+
+                    var dsNguyenLieu = ctNguyenLieuBUS.GetNguyenLieuTheoMonAn(maMonAn);
+                    foreach (var ngl in dsNguyenLieu)
+                    {
+                        float tongCan = ngl.SoLuongCan * soLuong;
+                        float tonKho = nguyenLieuBUS.LaySoLuongTon(ngl.MaNguyenLieu);
+                        if (tonKho < tongCan)
+                        {
+                            MessageBox.Show($"Không đủ nguyên liệu: {ngl.MaNguyenLieu}. Cần: {tongCan}, tồn: {tonKho}", "Thiếu nguyên liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                    }
+                }
+
+                // Tạo mã đơn hàng
+                string maDonHang = GenerateID();
+                DateTime ngayDat = DateTime.Now;
+
+                // Lưu đơn hàng vào bảng DonHang
+                DonHangDTO donHangDTO = new DonHangDTO(maDonHang, null, ngayDat, "Đã xác nhận");
+                DonHangBUS donHangBUS = new DonHangBUS();
+                if (!donHangBUS.insertDonHang2(donHangDTO))
+                {
+                    MessageBox.Show("Lỗi khi lưu đơn hàng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Lưu chi tiết đơn hàng vào bảng ChiTietDonHang
+                ChiTietDonHangBUS chiTietDonHangBUS = new ChiTietDonHangBUS();
+                foreach (ListViewItem item in lsvHoaDon.Items)
+                {
+                    string tenMon = item.SubItems[0].Text;
+                    string maMonAn = gioHangBUS.GetMaMonAnByTen(tenMon);
+                    if (string.IsNullOrEmpty(maMonAn))
+                    {
+                        MessageBox.Show($"Không tìm thấy mã món ăn cho món {tenMon}!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (!float.TryParse(item.SubItems[1].Text.Replace(",", ""), out float gia) ||
+                        !int.TryParse(item.SubItems[2].Text, out int soLuong))
+                    {
+                        MessageBox.Show($"Dữ liệu không hợp lệ cho món {tenMon}!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    float thanhTien = gia * soLuong;
+                    DateTime thoiGianDat = DateTime.Now;
+
+                    ChiTietDonHangDTO chiTietDTO = new ChiTietDonHangDTO
+                    {
+                        MaDonHang = maDonHang,
+                        MaMonAn = maMonAn,
+                        SoLuong = soLuong,
+                        ThanhTien = thanhTien,
+                        ThoiGianDat = thoiGianDat
+                    };
+
+                    if (!chiTietDonHangBUS.ThemChiTietDonHang(chiTietDTO))
+                    {
+                        MessageBox.Show($"Lỗi khi lưu chi tiết đơn hàng cho món {tenMon}!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
+                // Trừ kho nguyên liệu
+                foreach (ListViewItem item in lsvHoaDon.Items)
+                {
+                    string tenMon = item.SubItems[0].Text;
+                    string maMonAn = gioHangBUS.GetMaMonAnByTen(tenMon);
+                    int soLuong = int.Parse(item.SubItems[2].Text);
+
+                    var dsNguyenLieu = ctNguyenLieuBUS.GetNguyenLieuTheoMonAn(maMonAn);
+                    foreach (var ngl in dsNguyenLieu)
+                    {
+                        float soLuongTru = ngl.SoLuongCan * soLuong;
+                        nguyenLieuBUS.TruSoLuong(ngl.MaNguyenLieu, soLuongTru);
+                    }
+                }
+
+                // Hiển thị hóa đơn
+                frmHoaDonTaiQuan frmHoaDonTQ = new frmHoaDonTaiQuan(maDonHang);
+                frmHoaDonTQ.ShowDialog();
+
+                // Xóa giỏ hàng
+                lsvHoaDon.Items.Clear();
+                UpdateTongTien();
+                MessageBox.Show("Thanh toán thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi thanh toán: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
+
+        private string GenerateID()
+        {
+            return Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
+        }
+
+     
     }
 }

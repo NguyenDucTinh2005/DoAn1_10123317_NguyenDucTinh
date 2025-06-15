@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTO", "DTO\DTO.csproj", "{6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BUS", "BUS\BUS.csproj", "{EF263AA6-1BFF-4CC5-AC69-29F7A4C26AE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test-case", "Test-case\Test-case.csproj", "{664CB44C-4DFF-4289-88D5-8C741180F585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EF263AA6-1BFF-4CC5-AC69-29F7A4C26AE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF263AA6-1BFF-4CC5-AC69-29F7A4C26AE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF263AA6-1BFF-4CC5-AC69-29F7A4C26AE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{664CB44C-4DFF-4289-88D5-8C741180F585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{664CB44C-4DFF-4289-88D5-8C741180F585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{664CB44C-4DFF-4289-88D5-8C741180F585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{664CB44C-4DFF-4289-88D5-8C741180F585}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,6 +13,8 @@ namespace DTO
         string tenKhachHang;
         string diaChi;
         string soDienThoai;
+        private string tenDangnhap;
+        private string v;
 
         public string MaKhachHang { get => maKhachHang; set => maKhachHang = value; }
         public string TenKhachHang { get => tenKhachHang; set => tenKhachHang = value; }
@@ -33,6 +35,7 @@ namespace DTO
             this.DiaChi = row.Rows[0]["DiaChi"].ToString();
             this.SoDienThoai = row.Rows[0]["SoDienThoai"].ToString();
         }
-        
+
+       
     }
 }

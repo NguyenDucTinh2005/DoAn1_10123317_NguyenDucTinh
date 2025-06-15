@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Tên món");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Đơn giá");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Số lượng");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Tên món");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Đơn giá");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Số lượng");
             this.panel2 = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.txtTimKiem = new System.Windows.Forms.TextBox();
@@ -65,7 +65,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(659, 591);
+            this.panel2.Size = new System.Drawing.Size(659, 723);
             this.panel2.TabIndex = 4;
             // 
             // label6
@@ -113,11 +113,11 @@
             // 
             this.dtgvDanhSachMon.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtgvDanhSachMon.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dtgvDanhSachMon.Location = new System.Drawing.Point(0, 139);
+            this.dtgvDanhSachMon.Location = new System.Drawing.Point(0, 120);
             this.dtgvDanhSachMon.Name = "dtgvDanhSachMon";
             this.dtgvDanhSachMon.RowHeadersWidth = 51;
             this.dtgvDanhSachMon.RowTemplate.Height = 24;
-            this.dtgvDanhSachMon.Size = new System.Drawing.Size(657, 450);
+            this.dtgvDanhSachMon.Size = new System.Drawing.Size(657, 601);
             this.dtgvDanhSachMon.TabIndex = 0;
             this.dtgvDanhSachMon.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgvDanhSachMon_CellClick);
             // 
@@ -242,9 +242,9 @@
             this.lsvHoaDon.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.lsvHoaDon.HideSelection = false;
             this.lsvHoaDon.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
             this.lsvHoaDon.Location = new System.Drawing.Point(3, 95);
             this.lsvHoaDon.Name = "lsvHoaDon";
             this.lsvHoaDon.Size = new System.Drawing.Size(577, 378);
@@ -256,7 +256,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1206, 591);
+            this.ClientSize = new System.Drawing.Size(1206, 723);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.ListView);
             this.Name = "frmBanHangTaiQuan";

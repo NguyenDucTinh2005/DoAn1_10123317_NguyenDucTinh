@@ -16,37 +16,34 @@ namespace DoAn1
 {
     public partial class frmThongTinNhanHang : Form
     {
-        KhachHangBUS khachHangBUS = new KhachHangBUS();
-        DonHangBUS donHangBUS = new DonHangBUS();
-        ChiTietDonHangBUS chiTietDonHangBUS = new ChiTietDonHangBUS();
-        MonAnBUS monAnBUS = new MonAnBUS();
         private List<ListViewItem> cartItems;
-        private List<ChiTietDonHangDTO> reOrderItems; // Danh sách chi tiết đơn hàng khi đặt lại
+        private List<ChiTietDonHangDTO> reOrderItems;
+        private string maKhachHang;
+        private KhachHangBUS khachHangBUS = new KhachHangBUS();
+        private DonHangBUS donHangBUS = new DonHangBUS();
+        private ChiTietDonHangBUS chiTietDonHangBUS = new ChiTietDonHangBUS();
+        private MonAnBUS monAnBUS = new MonAnBUS();
+        private LichSuDatHangBUS lichSuDatHangBUS = new LichSuDatHangBUS();
+        private ThongTinNhanHangBUS thongTinNhanHangBUS = new ThongTinNhanHangBUS();
+        private NguyenLieuBUS nguyenLieuBUS = new NguyenLieuBUS();
+        private ChiTietNguyenLieuBUS chiTietNguyenLieuBUS = new ChiTietNguyenLieuBUS();
 
-        // Constructor mặc định
-        public frmThongTinNhanHang()
+        public frmThongTinNhanHang(List<ListViewItem> cartItems, string maKhachHang)
         {
             InitializeComponent();
-            this.cartItems = null;
-            this.reOrderItems = null;
-        }
-
-        // Constructor cho đặt hàng từ frmDatHang
-        public frmThongTinNhanHang(List<ListViewItem> cartItems) : this()
-        {
             this.cartItems = cartItems;
+            this.maKhachHang = maKhachHang;
         }
 
-        // Constructor cho đặt lại đơn hàng từ frmLichSuDatHang
-        public frmThongTinNhanHang(List<ChiTietDonHangDTO> reOrderItems) : this()
+        public frmThongTinNhanHang(List<ChiTietDonHangDTO> reOrderItems, string maKhachHang)
         {
+            InitializeComponent();
             this.reOrderItems = reOrderItems;
+            this.maKhachHang = maKhachHang;
         }
 
-        // Thuộc tính công khai để lấy thông tin khách hàng
-        public string TenNguoiNhan => txtTenNguoiNhan.Text.Trim();
-        public string SoDienThoai => txtSoDienThoai.Text.Trim();
-        public string DiaChi => txtDiaChiNhanHang.Text.Trim();
+        public List<ListViewItem> CartItems => cartItems;
+        public List<ChiTietDonHangDTO> ReOrderItems => reOrderItems;
 
         private void btnDatHang_Click(object sender, EventArgs e)
         {
@@ -65,98 +62,133 @@ namespace DoAn1
                 return;
             }
 
-            string maKhachHang = GenerateID();
+            if (!CheckNguyenLieu()) return;
+
             string maDonHang = GenerateID();
             DateTime ngayDat = DateTime.Now;
-
-            var khachHangDTO = new KhachHangDTO(maKhachHang, tenNguoiNhan, diaChi, soDienThoai);
             var donHangDTO = new DonHangDTO(maDonHang, maKhachHang, ngayDat);
+            bool isSuccess = true;
 
-            bool khachHangInserted = khachHangBUS.insertKhachHang(khachHangDTO);
-            bool donHangInserted = donHangBUS.insertDonHang(donHangDTO);
-
-            if (khachHangInserted && donHangInserted)
+            if (!donHangBUS.insertDonHang(donHangDTO))
             {
-                bool allDetailsInserted = true;
-
-                // Xử lý đặt hàng từ frmDatHang (cartItems)
-                if (cartItems != null && cartItems.Any())
-                {
-                    foreach (var item in cartItems)
-                    {
-                        string tenMonAn = item.SubItems[0].Text;
-                        float giaBan;
-                        if (!float.TryParse(item.SubItems[1].Text, out giaBan))
-                        {
-                            MessageBox.Show($"Giá bán không hợp lệ cho món {tenMonAn}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            allDetailsInserted = false;
-                            break;
-                        }
-                        int soLuong;
-                        if (!int.TryParse(item.SubItems[2].Text, out soLuong))
-                        {
-                            MessageBox.Show($"Số lượng không hợp lệ cho món {tenMonAn}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            allDetailsInserted = false;
-                            break;
-                        }
-
-                        string maMonAn = monAnBUS.GetMaMonAnByTen(tenMonAn);
-                        if (string.IsNullOrEmpty(maMonAn))
-                        {
-                            MessageBox.Show($"Không tìm thấy mã món ăn cho {tenMonAn}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            allDetailsInserted = false;
-                            break;
-                        }
-
-                        ChiTietDonHangDTO ctdh = new ChiTietDonHangDTO(
-                            maDonHang,
-                            maMonAn,
-                            soLuong,
-                            giaBan * soLuong,
-                            ngayDat
-                        );
-
-                        if (!chiTietDonHangBUS.ThemChiTietDonHang(ctdh))
-                        {
-                            allDetailsInserted = false;
-                            break;
-                        }
-                    }
-                }
-                // Xử lý đặt lại đơn hàng từ frmLichSuDatHang (reOrderItems)
-                else if (reOrderItems != null && reOrderItems.Any())
-                {
-                    foreach (var ctdh in reOrderItems)
-                    {
-                        ctdh.MaDonHang = maDonHang; // Cập nhật MaDonHang mới
-                        ctdh.ThoiGianDat = ngayDat; // Cập nhật thời gian đặt mới
-                        if (!chiTietDonHangBUS.ThemChiTietDonHang(ctdh))
-                        {
-                            allDetailsInserted = false;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Không có chi tiết đơn hàng để lưu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    allDetailsInserted = false;
-                }
-
-                if (allDetailsInserted)
-                {
-                    MessageBox.Show("Đặt hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.DialogResult = DialogResult.OK; // Đặt DialogResult để báo hiệu thành công
-                    this.Close();
-                }
-                else
-                {
-                    MessageBox.Show("Lỗi khi lưu chi tiết đơn hàng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                isSuccess = false;
             }
             else
             {
-                MessageBox.Show("Lỗi khi lưu khách hàng hoặc đơn hàng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var thongTinDTO = new ThongTinNhanHangDTO(maDonHang, tenNguoiNhan, soDienThoai, diaChi);
+                if (!thongTinNhanHangBUS.InsertThongTin(thongTinDTO))
+                {
+                    donHangBUS.deleteDonHang(maDonHang);
+                    isSuccess = false;
+                }
+                else
+                {
+                    isSuccess = InsertChiTietDonHang(maDonHang, ngayDat);
+                }
+            }
+
+            if (isSuccess)
+            {
+                TruNguyenLieu();
+                MessageBox.Show("Đặt hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Đặt hàng thất bại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool CheckNguyenLieu()
+        {
+            var items = cartItems ?? reOrderItems?.Select(ct => new ListViewItem(new[]
+            {
+                monAnBUS.GetTenMonAnByMa(ct.MaMonAn),
+                ct.ThanhTien.ToString(),
+                ct.SoLuong.ToString()
+            })).ToList();
+
+            if (items == null || !items.Any()) return false;
+
+            foreach (var item in items)
+            {
+                string tenMonAn = item.SubItems[0].Text;
+                int soLuong = int.Parse(item.SubItems[2].Text);
+                string maMonAn = monAnBUS.GetMaMonAnByTen(tenMonAn);
+
+                var danhSachNguyenLieu = chiTietNguyenLieuBUS.GetNguyenLieuTheoMonAn(maMonAn);
+                foreach (var ngl in danhSachNguyenLieu)
+                {
+                    float tongCan = ngl.SoLuongCan * soLuong;
+                    float tonKho = nguyenLieuBUS.LaySoLuongTon(ngl.MaNguyenLieu);
+                    if (tonKho < tongCan)
+                    {
+                        MessageBox.Show($"Không đủ nguyên liệu: {ngl.MaNguyenLieu}. Cần: {tongCan}, tồn kho: {tonKho}", "Thiếu nguyên liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool InsertChiTietDonHang(string maDonHang, DateTime ngayDat)
+        {
+            bool success = true;
+            var items = cartItems ?? reOrderItems?.Select(ct => new ListViewItem(new[]
+            {
+                monAnBUS.GetTenMonAnByMa(ct.MaMonAn),
+                ct.ThanhTien.ToString(),
+                ct.SoLuong.ToString()
+            })).ToList();
+
+            if (items == null || !items.Any()) return false;
+
+            foreach (var item in items)
+            {
+                string tenMonAn = item.SubItems[0].Text;
+                float giaBan = float.Parse(item.SubItems[1].Text);
+                int soLuong = int.Parse(item.SubItems[2].Text);
+
+                string maMonAn = monAnBUS.GetMaMonAnByTen(tenMonAn);
+                if (string.IsNullOrEmpty(maMonAn)) return false;
+
+                var ctdh = new ChiTietDonHangDTO(maDonHang, maMonAn, soLuong, giaBan, ngayDat);
+                if (!chiTietDonHangBUS.ThemChiTietDonHang(ctdh)) return false;
+
+                var lichSuDTO = new LichSuDatHangDTO(
+                    GenerateID(), maDonHang, ngayDat, ngayDat,
+                    maMonAn, tenMonAn, soLuong, giaBan
+                );
+                lichSuDatHangBUS.insertLichSuDatHang(lichSuDTO);
+            }
+
+            return success;
+        }
+
+        private void TruNguyenLieu()
+        {
+            var items = cartItems ?? reOrderItems?.Select(ct => new ListViewItem(new[]
+            {
+                monAnBUS.GetTenMonAnByMa(ct.MaMonAn),
+                ct.ThanhTien.ToString(),
+                ct.SoLuong.ToString()
+            })).ToList();
+
+            if (items == null) return;
+
+            foreach (var item in items)
+            {
+                string tenMonAn = item.SubItems[0].Text;
+                int soLuong = int.Parse(item.SubItems[2].Text);
+                string maMonAn = monAnBUS.GetMaMonAnByTen(tenMonAn);
+
+                var dsNguyenLieu = chiTietNguyenLieuBUS.GetNguyenLieuTheoMonAn(maMonAn);
+                foreach (var ngl in dsNguyenLieu)
+                {
+                    float tongCan = ngl.SoLuongCan * soLuong;
+                    nguyenLieuBUS.TruSoLuong(ngl.MaNguyenLieu, tongCan);
+                }
             }
         }
 

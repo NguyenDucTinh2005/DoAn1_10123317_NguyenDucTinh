@@ -38,25 +38,42 @@ namespace DoAn1
                 txtMatKhau.UseSystemPasswordChar = true;
             }
         }
-      
+
         private void btnDangNhap_Click(object sender, EventArgs e)
         {
             string tenDangNhap = txtTenDangNhap.Text.Trim();
             string matKhau = txtMatKhau.Text.Trim();
-            bool dangNhapThanhCong = taiKhoanBus.KiemTraDangNhap(tenDangNhap, matKhau);
-            if (dangNhapThanhCong)
+
+            if (taiKhoanBus.KiemTraDangNhap(tenDangNhap, matKhau))
             {
-                MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Đăng nhập thành công!", "Thông báo");
+
+                // Lấy quyền người dùng và MaKhachHang
+                DataTable dt = taiKhoanBus.getAllTaiKhoan();
+                string quyen = "Khách hàng";
+                string maKhachHang = null;
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["TenDangNhap"].ToString() == tenDangNhap)
+                    {
+                        quyen = row["Quyen"].ToString();
+                        maKhachHang = row["MaKhachHang"]?.ToString(); // Lấy MaKhachHang
+                        break;
+                    }
+                }
+
                 this.Hide();
-                frmTrangChu frm = new frmTrangChu(); // Màn hình chính sau khi đăng nhập
+                frmTrangChu frm = new frmTrangChu(quyen, tenDangNhap, maKhachHang); // Truyền cả ba tham số
                 frm.ShowDialog();
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Lỗi");
             }
         }
+
 
         private void frmDangNhap_FormClosing(object sender, FormClosingEventArgs e)
         {

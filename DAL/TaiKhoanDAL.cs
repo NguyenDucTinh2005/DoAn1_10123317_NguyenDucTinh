@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using DoAn1.DTO;
+using DTO;
 
 namespace DAL
 {
@@ -20,22 +21,20 @@ namespace DAL
         }
         public bool insertTaiKhoan(TaiKhoanDTO tk)
         {
-            string query = string.Format("INSERT INTO TaiKhoan (TenDangnhap, Matkhau, SoDienthoai, Quyen) VALUES ('{0}', '{1}', '{2}', '{3}')",
-                tk.TenDangnhap, tk.Matkhau, tk.SoDienthoai, tk.quyen);
+            
+            string query = string.Format("INSERT INTO TaiKhoan (TenDangNhap, MatKhau, SoDienThoai, Quyen, MaKhachHang) VALUES (N'{0}', N'{1}', N'{2}', N'{3}', {4})",
+                tk.TenDangnhap, tk.Matkhau, tk.SoDienthoai, tk.quyen, tk.MaKhachHang1 == null ? "NULL" : $"'{tk.MaKhachHang1}'");
+
             con.Open();
             SqlCommand cmd = new SqlCommand(query, con);
-            if (cmd.ExecuteNonQuery() > 0)
-            {
-                con.Close();
-                return true;
-            }
-
+            int result = cmd.ExecuteNonQuery();
             con.Close();
-            return false;
+            return result > 0;
         }
 
         public bool updateTaiKhoan(TaiKhoanDTO tk)
         {
+            string matKhauMaHoa = MaHoaTaiKhoan.MaHoaSHA256(tk.Matkhau);
             string query = string.Format("UPDATE TaiKhoan SET TenDangNhap = N'{0}', MatKhau = N'{1}', SoDienThoai = '{2}', Quyen = N'{3}' WHERE MaTaiKhoan = {4}",
                 tk.TenDangnhap, tk.Matkhau, tk.SoDienthoai, tk.quyen, tk.maTaiKhoan);  // Viết hoa đúng thuộc tính
 
@@ -56,20 +55,31 @@ namespace DAL
         }
         public bool dangKyTaiKhoan(TaiKhoanDTO tk)
         {
-            string query = string.Format("INSERT INTO TaiKhoan (TenDangnhap, Matkhau, SoDienthoai) VALUES ('{0}', '{1}', '{2}')", tk.TenDangnhap, tk.Matkhau, tk.SoDienthoai);
+            // Tạo MaKhachHang mới
+            string maKhachHang = Guid.NewGuid().ToString("N").Substring(0, 10).ToUpper();
+
+            // Thêm vào bảng KhachHang
+            KhachHangDTO khachHang = new KhachHangDTO(maKhachHang, tk.TenDangnhap, "", tk.SoDienthoai);
+            KhachHangDAL khachHangDAL = new KhachHangDAL();
+            bool khachHangInserted = khachHangDAL.insertKhachHang(khachHang);
+
+            if (!khachHangInserted)
+                return false;
+
+            // Thêm vào bảng TaiKhoan với MaKhachHang
+            string query = string.Format("INSERT INTO TaiKhoan (TenDangNhap, MatKhau, SoDienThoai, Quyen, MaKhachHang) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')",
+                tk.TenDangnhap, tk.Matkhau, tk.SoDienthoai, tk.quyen, maKhachHang);
 
             con.Open();
             SqlCommand cmd = new SqlCommand(query, con);
-            if (cmd.ExecuteNonQuery() > 0)
+            int result = cmd.ExecuteNonQuery();
+            con.Close();
 
-                return true;
-
-
-            return false;
+            return result > 0;
         }
-
         public bool KiemTraDangNhap(string tenDangNhap, string matKhau)
         {
+            
             string sql = "SELECT COUNT(*) FROM TaiKhoan WHERE TenDangNhap = @TenDangNhap AND MatKhau = @MatKhau";
 
             kennoi();

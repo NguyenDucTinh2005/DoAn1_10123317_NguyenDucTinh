@@ -9,6 +9,11 @@ create table TaiKhoan (
     SoDienThoai VARCHAR(15),
     Quyen NVARCHAR(50) default N'khách hàng'
 );
+ALTER TABLE TaiKhoan
+ADD MaKhachHang CHAR(10) NULL,
+FOREIGN KEY (MaKhachHang) REFERENCES KhachHang(MaKhachHang) ON DELETE SET NULL ON UPDATE CASCADE;
+
+
 
 create TABLE KhachHang (
     MaKhachHang CHAR(10) PRIMARY KEY,
@@ -34,13 +39,29 @@ CREATE TABLE MonAn (
     MaLoaiMon CHAR(10),
     FOREIGN KEY (MaLoaiMon) REFERENCES LoaiMonAn(MaLoaiMon) ON DELETE CASCADE ON UPDATE CASCADE
 );
+CREATE TABLE NguyenLieu (
+    MaNguyenLieu CHAR(10) PRIMARY KEY,
+    TenNguyenLieu NVARCHAR(100) NOT NULL,
+    DonViTinh NVARCHAR(20),           -- ví dụ: gram, ml, cái, lát
+    SoLuongTon FLOAT NOT NULL         -- số lượng còn lại trong kho
+);
+
+CREATE TABLE ChiTietNguyenLieu (
+    MaMonAn CHAR(10),
+    MaNguyenLieu CHAR(10),
+    SoLuongCan FLOAT NOT NULL,        -- mỗi phần cần bao nhiêu
+
+    PRIMARY KEY (MaMonAn, MaNguyenLieu),
+    FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn) ON DELETE CASCADE,
+    FOREIGN KEY (MaNguyenLieu) REFERENCES NguyenLieu(MaNguyenLieu) ON DELETE CASCADE
+);
 CREATE TABLE DonHang (
     MaDonHang CHAR(10) PRIMARY KEY,
     NgayDat DATETIME NOT NULL,
     MaKhachHang CHAR(10),
+	TrangThai Nvarchar(50),default N'Chưa xác nhận'
     FOREIGN KEY (MaKhachHang) REFERENCES KhachHang(MaKhachHang) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 
 
 CREATE TABLE ChiTietDonHang (
@@ -55,10 +76,30 @@ CREATE TABLE ChiTietDonHang (
 );
 
 
+CREATE TABLE LichSuDatHang (
+    MaLichSu CHAR(10) PRIMARY KEY,
+    MaDonHang CHAR(10),
+    NgayDat DATETIME,
+    ThoiGianDat DATETIME,
+    MaMonAn CHAR(10),
+    TenMonAn NVARCHAR(100),
+    SoLuong INT,
+    ThanhTien FLOAT
+);
+
+ALTER TABLE LichSuDatHang
+ADD CONSTRAINT FK_LichSuDatHang_DonHang
+FOREIGN KEY (MaDonHang) REFERENCES DonHang(MaDonHang);
 
 
 
-
+CREATE TABLE ThongTinNhanHang (
+    MaDonHang CHAR(10) PRIMARY KEY,
+    TenNguoiNhan NVARCHAR(100) NOT NULL,
+    SoDienThoai CHAR(10)Check  (SoDienThoai LIKE '[0][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+    DiaChi NVARCHAR(100) NOT NULL,
+    FOREIGN KEY (MaDonHang) REFERENCES DonHang(MaDonHang) ON DELETE CASCADE
+);
 
 
 --Chen duwx lieeuj
@@ -70,7 +111,7 @@ VALUES
 ('nhanvien', 'nhanvien', '0977889900', N'Nhân viên');
 
 Select*from TaiKhoan
-
+delete from TaiKhoan
 -- Chèn dữ liệu vào bảng LoaiMonAn
 INSERT INTO LoaiMonAn (MaLoaiMon, TenLoaiMon) 
 VALUES 
@@ -161,13 +202,14 @@ VALUES
 ('KH002', N'Trần Thị B', '0987654321', N'456 Đường Trần Hưng Đạo, Quận 5, TP.HCM'),
 ('KH003', N'Lê Văn C', '0901234567', N'789 Đường Nguyễn Huệ, Quận 1, TP.HCM');
 select*from khachhang
+delete from KhachHang
 -- Chèn dữ liệu vào bảng DonHang
 INSERT INTO DonHang (MaDonHang, NgayDat, MaKhachHang)
 VALUES
 ('DH004', '2025-04-25 10:00:00', 'KH001'),
 ('DH002', '2025-04-26 14:30:00', 'KH002'),
 ('DH003', '2025-04-26 19:00:00', 'KH003');
-select*from DonHang
+delete from DonHang
 -- Chèn dữ liệu vào bảng ChiTietDonHang
 INSERT INTO ChiTietDonHang (MaDonHang, MaMonAn, SoLuong, ThanhTien, ThoiGianDat)
 VALUES
@@ -179,8 +221,7 @@ VALUES
 
 ('DH003', 'MA045', 1, 70000, '2025-04-26 19:05:00'),  -- Gà nướng BBQ
 ('DH003', 'MA024', 2, 100000, '2025-04-26 19:10:00'); -- Bánh tiramisu
-
-
+delete from ChiTietDonHang
 CREATE TRIGGER trg_XoaKhachHangKhiXoaDonHang
 ON DonHang
 AFTER DELETE
@@ -224,19 +265,14 @@ ORDER BY
     dh.NgayDat DESC, ctdh.ThoiGianDat DESC;
 
 
+
+
 CREATE PROCEDURE SP_XoaLichSuDatHang
     @MaDonHang CHAR(10)
 AS
 BEGIN
-    DELETE FROM ChiTietDonHang WHERE MaDonHang = @MaDonHang;
-    DELETE FROM DonHang WHERE MaDonHang = @MaDonHang;
-END
-
-select*from ChiTietDonHang
-
-SELECT * FROM DonHang WHERE MaDonHang = '9773165049';
-SELECT * FROM KhachHang WHERE MaKhachHang = '9A18356EC7';
-select * from ChiTietDonHang
+    DELETE FROM LichSuDatHang WHERE MaDonHang = @MaDonHang;
+END;
 
 
 

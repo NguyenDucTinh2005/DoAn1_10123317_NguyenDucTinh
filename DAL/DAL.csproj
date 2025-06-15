@@ -42,15 +42,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChiTienDonHangDAL.cs" />
+    <Compile Include="ChiTietNguyenLieuDAL.cs" />
     <Compile Include="DBconnect.cs" />
     <Compile Include="DonHangDAL.cs" />
     <Compile Include="HoaDonDAL.cs" />
     <Compile Include="KhachHangDAL.cs" />
     <Compile Include="LichSuDatHangDAL.cs" />
     <Compile Include="LoaiMonAnDAL.cs" />
+    <Compile Include="MaHoaTaiKhoan.cs" />
     <Compile Include="MonAnDAL.cs" />
+    <Compile Include="NguyenLieuDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaiKhoanDAL.cs" />
+    <Compile Include="ThongKeDAL.cs" />
+    <Compile Include="ThongTinNhanHangDAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTO\DTO.csproj">

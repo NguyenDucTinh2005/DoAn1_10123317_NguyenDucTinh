@@ -7,7 +7,6 @@ using System.Data.SqlClient;
 using System.Data;
 using DoAn1.DTO;
 
-
 namespace DAL
 {
     public class MonAnDAL:DBconnect
@@ -83,24 +82,35 @@ namespace DAL
         }
         public DataTable getMonAnByLoai(string maLoaiMon)
         {
-            string query = "SELECT * FROM MonAn WHERE MaLoaiMon = @MaLoaiMon";
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-        new SqlParameter("@MaLoaiMon", maLoaiMon)
-            };
-            return connect.getAll(query, parameters);
+            string query = string.Format("SELECT * FROM MonAn WHERE MaLoaiMon = '{0}'", maLoaiMon);
+            con.Open();
+            SqlCommand cmd = new SqlCommand(query, con);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            con.Close();
+            return dt;
         }
 
         public string GetMaMonAnByTen(string tenMonAn)
         {
-            string query = "SELECT MaMonAn FROM MonAn WHERE TenMonAn = @TenMonAn";
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@TenMonAn", tenMonAn)
-            };
-
-            DataTable dt = getAll(query, parameters);
-            return dt.Rows.Count > 0 ? dt.Rows[0]["MaMonAn"].ToString() : null;
+            string query = string.Format("SELECT MaMonAn FROM MonAn WHERE TenMonAn = N'{0}'", tenMonAn);
+            con.Open();
+            SqlCommand cmd = new SqlCommand(query, con);
+            object result = cmd.ExecuteScalar();
+            con.Close();
+            return result != null ? result.ToString() : null;
         }
+
+        public string GetTenMonAnByMa(string maMonAn)
+        {
+            string query = string.Format("SELECT TenMonAn FROM MonAn WHERE MaMonAn = '{0}'", maMonAn);
+            con.Open();
+            SqlCommand cmd = new SqlCommand(query, con);
+            object result = cmd.ExecuteScalar();
+            con.Close();
+            return result != null ? result.ToString() : null;
+        }
+
     }
 }

@@ -76,6 +76,7 @@ namespace DAL
             string query = string.Format("SELECT * FROM LoaiMonAn WHERE MaLoaiMon LIKE '%{0}%' OR TenLoaiMon LIKE N'%{0}%'", keyword);
             return connect.getAll(query);
         }
+       
 
     }
 }

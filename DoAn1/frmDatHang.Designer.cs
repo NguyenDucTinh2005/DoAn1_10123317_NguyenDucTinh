@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Tên món");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Đơn giá");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Số lượng");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Tên món");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Đơn giá");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Số lượng");
             this.ListView = new System.Windows.Forms.Panel();
             this.lblTenMon = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -75,6 +75,7 @@
             // lblTenMon
             // 
             this.lblTenMon.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblTenMon.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.lblTenMon.Location = new System.Drawing.Point(74, 60);
             this.lblTenMon.Name = "lblTenMon";
             this.lblTenMon.Size = new System.Drawing.Size(142, 23);
@@ -83,25 +84,26 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label4.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.label4.Location = new System.Drawing.Point(77, 26);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(77, 19);
+            this.label4.Size = new System.Drawing.Size(106, 26);
             this.label4.TabIndex = 6;
             this.label4.Text = "Tên món:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label3.Location = new System.Drawing.Point(242, 26);
+            this.label3.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label3.Location = new System.Drawing.Point(223, 24);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(82, 19);
+            this.label3.Size = new System.Drawing.Size(110, 26);
             this.label3.TabIndex = 6;
             this.label3.Text = "Số lượng:";
             // 
             // nmSoLuong
             // 
+            this.nmSoLuong.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.nmSoLuong.Location = new System.Drawing.Point(246, 61);
             this.nmSoLuong.Minimum = new decimal(new int[] {
             100,
@@ -109,7 +111,7 @@
             0,
             -2147483648});
             this.nmSoLuong.Name = "nmSoLuong";
-            this.nmSoLuong.Size = new System.Drawing.Size(66, 22);
+            this.nmSoLuong.Size = new System.Drawing.Size(66, 33);
             this.nmSoLuong.TabIndex = 5;
             this.nmSoLuong.Value = new decimal(new int[] {
             1,
@@ -119,8 +121,8 @@
             // 
             // btnXoaMon
             // 
-            this.btnXoaMon.Font = new System.Drawing.Font("Arial", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnXoaMon.Location = new System.Drawing.Point(351, 54);
+            this.btnXoaMon.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.btnXoaMon.Location = new System.Drawing.Point(358, 54);
             this.btnXoaMon.Name = "btnXoaMon";
             this.btnXoaMon.Size = new System.Drawing.Size(132, 35);
             this.btnXoaMon.TabIndex = 4;
@@ -130,8 +132,8 @@
             // 
             // btnThemMon
             // 
-            this.btnThemMon.Font = new System.Drawing.Font("Arial", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnThemMon.Location = new System.Drawing.Point(351, 10);
+            this.btnThemMon.Font = new System.Drawing.Font("Arial", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.btnThemMon.Location = new System.Drawing.Point(358, 10);
             this.btnThemMon.Name = "btnThemMon";
             this.btnThemMon.Size = new System.Drawing.Size(132, 35);
             this.btnThemMon.TabIndex = 4;
@@ -174,9 +176,9 @@
             this.lsvHoaDon.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.lsvHoaDon.HideSelection = false;
             this.lsvHoaDon.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
             this.lsvHoaDon.Location = new System.Drawing.Point(3, 95);
             this.lsvHoaDon.Name = "lsvHoaDon";
             this.lsvHoaDon.Size = new System.Drawing.Size(577, 378);
@@ -202,7 +204,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label6.Location = new System.Drawing.Point(3, 64);
+            this.label6.Location = new System.Drawing.Point(11, 62);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(93, 23);
             this.label6.TabIndex = 4;
@@ -243,11 +245,11 @@
             // 
             this.dtgvDanhSachMon.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtgvDanhSachMon.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dtgvDanhSachMon.Location = new System.Drawing.Point(0, 139);
+            this.dtgvDanhSachMon.Location = new System.Drawing.Point(0, 103);
             this.dtgvDanhSachMon.Name = "dtgvDanhSachMon";
             this.dtgvDanhSachMon.RowHeadersWidth = 51;
             this.dtgvDanhSachMon.RowTemplate.Height = 24;
-            this.dtgvDanhSachMon.Size = new System.Drawing.Size(657, 450);
+            this.dtgvDanhSachMon.Size = new System.Drawing.Size(657, 486);
             this.dtgvDanhSachMon.TabIndex = 0;
             this.dtgvDanhSachMon.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgvDanhSachMon_CellClick);
             // 

@@ -9,17 +9,22 @@ namespace DTO
 {
     public class LichSuDatHangDTO
     {
-        // 1. Khai báo biến private trước
+        // 1. Khai báo biến private
+        private string maLichSu;
         private string maDonHang;
         private DateTime ngayDat;
-        private string maKhachHang;
+        private DateTime thoiGianDat;
         private string maMonAn;
         private string tenMonAn;
         private int soLuong;
         private double thanhTien;
-        private DateTime thoiGianDat;
 
         // 2. Thuộc tính public (Get, Set)
+        public string MaLichSu
+        {
+            get { return maLichSu; }
+            set { maLichSu = value; }
+        }
         public string MaDonHang
         {
             get { return maDonHang; }
@@ -30,10 +35,10 @@ namespace DTO
             get { return ngayDat; }
             set { ngayDat = value; }
         }
-        public string MaKhachHang
+        public DateTime ThoiGianDat
         {
-            get { return maKhachHang; }
-            set { maKhachHang = value; }
+            get { return thoiGianDat; }
+            set { thoiGianDat = value; }
         }
         public string MaMonAn
         {
@@ -55,36 +60,31 @@ namespace DTO
             get { return thanhTien; }
             set { thanhTien = value; }
         }
-        public DateTime ThoiGianDat
-        {
-            get { return thoiGianDat; }
-            set { thoiGianDat = value; }
-        }
 
         // 3. Constructor đầy đủ tham số
-        public LichSuDatHangDTO(string maDonHang, DateTime ngayDat, string maKhachHang, string maMonAn, string tenMonAn, int soLuong, double thanhTien, DateTime thoiGianDat)
+        public LichSuDatHangDTO(string maLichSu, string maDonHang, DateTime ngayDat, DateTime thoiGianDat, string maMonAn, string tenMonAn, int soLuong, double thanhTien)
         {
+            this.maLichSu = maLichSu;
             this.maDonHang = maDonHang;
             this.ngayDat = ngayDat;
-            this.maKhachHang = maKhachHang;
+            this.thoiGianDat = thoiGianDat;
             this.maMonAn = maMonAn;
             this.tenMonAn = tenMonAn;
             this.soLuong = soLuong;
             this.thanhTien = thanhTien;
-            this.thoiGianDat = thoiGianDat;
         }
 
         // 4. Constructor nhận DataRow
         public LichSuDatHangDTO(DataRow row)
         {
+            this.maLichSu = row["MaLichSu"].ToString();
             this.maDonHang = row["MaDonHang"].ToString();
             this.ngayDat = Convert.ToDateTime(row["NgayDat"]);
-            this.maKhachHang = row["MaKhachHang"].ToString();
-            this.maMonAn = row["MaMonAn"].ToString();
-            this.tenMonAn = row["TenMonAn"].ToString();
-            this.soLuong = Convert.ToInt32(row["SoLuong"]);
-            this.thanhTien = Convert.ToDouble(row["ThanhTien"]);
             this.thoiGianDat = Convert.ToDateTime(row["ThoiGianDat"]);
+            this.maMonAn = row["MaMonAn"] != DBNull.Value ? row["MaMonAn"].ToString() : null;
+            this.tenMonAn = row["TenMonAn"] != DBNull.Value ? row["TenMonAn"].ToString() : null;
+            this.soLuong = row["SoLuong"] != DBNull.Value ? Convert.ToInt32(row["SoLuong"]) : 0;
+            this.thanhTien = row["ThanhTien"] != DBNull.Value ? Convert.ToDouble(row["ThanhTien"]) : 0.0;
         }
     }
 }

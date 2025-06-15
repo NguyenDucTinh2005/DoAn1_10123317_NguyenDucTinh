@@ -11,33 +11,71 @@ namespace DAL
 {
     public class LichSuDatHangDAL : DBconnect
     {
-        DBconnect DBconnect = new DBconnect();
         public DataTable getAllLichSuDatHang()
         {
-
-            string query = "SELECT dh.MaDonHang, dh.NgayDat, kh.TenKhachHang, ctdh.MaMonAn, ma.TenMonAn, " +
-                           "ctdh.SoLuong, ctdh.ThanhTien, ctdh.ThoiGianDat " +
-                           "FROM DonHang dh " +
-                           "JOIN ChiTietDonHang ctdh ON dh.MaDonHang = ctdh.MaDonHang " +
-                           "JOIN MonAn ma ON ctdh.MaMonAn = ma.MaMonAn " +
-                           "JOIN KhachHang kh ON dh.MaKhachHang = kh.MaKhachHang";
-            return DBconnect.getAll(query);
+            string query = "SELECT * FROM LichSuDatHang";
+            return this.getAll(query);
         }
 
-
-        public bool deleteLichSuDatHang(string maDonHang)
+        public DataTable getLichSuDatHangByMaDonHang(string maDonHang)
         {
-            con.Open();
+            string query = "SELECT * FROM LichSuDatHang WHERE MaDonHang = @MaDonHang";
+            return getAllWithParam(query, new SqlParameter("@MaDonHang", maDonHang));
+        }
+        public bool insertLichSuDatHang(LichSuDatHangDTO dto)
+        {
+            try
+            {
+                con.Open();
+                string query = "INSERT INTO LichSuDatHang (MaLichSu, MaDonHang, NgayDat, ThoiGianDat, MaMonAn, TenMonAn, SoLuong, ThanhTien) " +
+                               "VALUES (@MaLichSu, @MaDonHang, @NgayDat, @ThoiGianDat, @MaMonAn, @TenMonAn, @SoLuong, @ThanhTien)";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@MaLichSu", dto.MaLichSu ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@MaDonHang", dto.MaDonHang ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@NgayDat", dto.NgayDat);
+                cmd.Parameters.AddWithValue("@ThoiGianDat", dto.ThoiGianDat);
+                cmd.Parameters.AddWithValue("@MaMonAn", dto.MaMonAn ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@TenMonAn", dto.TenMonAn ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@SoLuong", dto.SoLuong);
+                cmd.Parameters.AddWithValue("@ThanhTien", dto.ThanhTien);
 
-            SqlCommand cmd = new SqlCommand("SP_XoaLichSuDatHang", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@MaDonHang", maDonHang);
+                int rowsAffected = cmd.ExecuteNonQuery();
+                con.Close();
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                if (con.State == ConnectionState.Open) con.Close();
+                return false;
+            }
+        }
 
-            int rowsAffected = cmd.ExecuteNonQuery();
+        public bool deleteLichSuDatHangByMaDonHang(string maDonHang)
+        {
+            try
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SP_XoaLichSuDatHang", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@MaDonHang", maDonHang);
 
-            con.Close();
+                int rowsAffected = cmd.ExecuteNonQuery();
+                con.Close();
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                if (con.State == ConnectionState.Open) con.Close();
+                return false;
+            }
+        }
 
-            return rowsAffected > 0;
+        public DataTable getLichSuDatHangByMaKhachHang(string maKhachHang)
+        {
+            string query = "SELECT l.* FROM LichSuDatHang l " +
+                           "INNER JOIN DonHang d ON l.MaDonHang = d.MaDonHang " +
+                           "WHERE d.MaKhachHang = @MaKhachHang";
+            return getAllWithParam(query, new SqlParameter("@MaKhachHang", maKhachHang));
         }
     }
 }
